@@ -11,6 +11,6 @@
 
 + (NSDictionary *)objectClassInArray
 {
-    return @{ @"forecast" : @"forecastPart"};
+    return @{ @"forecast" : @"ForecastPart"};
 }
 @end

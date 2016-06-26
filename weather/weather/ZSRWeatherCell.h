@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class ForecastPart;
 @interface ZSRWeatherCell : UITableViewCell
+
+@property (nonatomic,strong) ForecastPart *forecastModel;
++ (instancetype)weatherCellWithTableView:(UITableView *)tableview;
 
 @end

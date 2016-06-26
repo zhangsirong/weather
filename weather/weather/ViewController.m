@@ -14,17 +14,18 @@
 #import "WeatherData.h"
 #import "MyData.h"
 #import "MJExtension.h"
-#import "forecastPart.h"
+#import "ForecastPart.h"
 #import "yesterday.h"
 #import "area.h"
 #import "UIImageView+LBBlurredImage.h"
 #import "ZSRTadayView.h"
 #import "ZSRTadayModel.h"
+#import "ZSRWeatherCell.h"
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) MyData *mydata;
 @property (nonatomic, strong) NSArray *areas;
-@property (nonatomic, strong) forecastPart *tadayPart;
+@property (nonatomic, strong) ForecastPart *tadayPart;
 @property (nonatomic, weak) UIView *headTempView;
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -33,8 +34,9 @@
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, strong) UIImageView *blurredImageView;
 @property (nonatomic, strong) ZSRTadayView *headerView;
-@property (nonatomic, strong) ZSRTadayModel *model;
-@property (nonatomic, assign) CGFloat screenHeight;
+@property (nonatomic, strong) UIView *footView;
+//@property (nonatomic, strong) ZSRTadayModel *model;
+
 
 
 @end
@@ -43,37 +45,15 @@
 -(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     
     if (self=[super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
-        [self requestData];
+        
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.screenHeight = [UIScreen mainScreen].bounds.size.height;
-    UIImage *background = [UIImage imageNamed:@"bg"];
-    self.backgroundImageView = [[UIImageView alloc] initWithImage:background];
-    self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
-    [self.view addSubview:self.backgroundImageView];
-    
-    self.blurredImageView = [[UIImageView alloc] init];
-    self.blurredImageView.contentMode = UIViewContentModeScaleAspectFill;
-    self.blurredImageView.alpha = 0;
-    [self.blurredImageView setImageToBlur:background blurRadius:10 completionBlock:nil];
-    [self.view addSubview:self.blurredImageView];
-    
-    self.tableView = [[UITableView alloc] init];
-    self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    self.tableView.separatorColor = [UIColor colorWithWhite:1 alpha:0.2];
-    self.tableView.pagingEnabled = YES;
-    [self.view addSubview:self.tableView];
-    
-    self.tableView.tableHeaderView = self.headerView;
-
-    
-
+    [self setupSubViews];
+    [self requestData];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -98,6 +78,15 @@
     }
     return _headerView;
 }
+
+-(UIView *)footView{
+    if (_footView == nil) {
+        _footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, sWidth, sHeight/2)];
+    }
+    return _footView;
+}
+
+
 - (UIView *)headView{
     
     UIView *headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, sWidth, sHeight / 2)];
@@ -124,36 +113,31 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *ID = @"cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
-        cell.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
+    ZSRWeatherCell *cell = [ZSRWeatherCell weatherCellWithTableView:tableView];
     switch (indexPath.row) {
         case 0:{
             
-            cell.textLabel.text =  self.tadayPart.low;
-            cell.textLabel.textColor = [UIColor redColor];
-            cell.imageView.image = [UIImage imageNamed:@"cloudy1"];
-            cell.detailTextLabel.text = @"dadadfa";
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
-            label.text = self.tadayPart.low;
-            label.backgroundColor = [UIColor redColor];
-            self.tempLabel = label;
-            cell.accessoryView =self.tempLabel;
+//            cell.textLabel.text =  self.tadayPart.low;
+//            cell.textLabel.backgroundColor = [UIColor grayColor];
+//            cell.textLabel.textColor = [UIColor redColor];
+//            cell.imageView.image = [UIImage imageNamed:@"cloudy1"];
+//            cell.detailTextLabel.text = self.tadayPart.type;
+//            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
+//            label.text = self.tadayPart.low;
+////            label.backgroundColor = [UIColor redColor];
+//            self.tempLabel = label;
+//            cell.accessoryView =self.tempLabel;
         }
             break;
         case 1:
-            cell.textLabel.text = @"2555";
+//            cell.textLabel.text = @"2555";
             break;
         case 2:
-            cell.textLabel.text = @"2555";
+//            cell.textLabel.text = @"2555";
             break;
         case 3:
-            cell.textLabel.text = @"2555";
+//            cell.textLabel.text = @"2555";
             break;
         default:
             break;
@@ -163,21 +147,42 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 4;
+    return 5;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 1;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 60;
+    return 80;
 }
 
 
 
 -(void)setupSubViews{
 //    [self.view addSubview:self.headView];
+    UIImage *background = [UIImage imageNamed:@"bg"];
+    self.backgroundImageView = [[UIImageView alloc] initWithImage:background];
+    self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+    [self.view addSubview:self.backgroundImageView];
+    
+    self.blurredImageView = [[UIImageView alloc] init];
+    self.blurredImageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.blurredImageView.alpha = 0;
+    [self.blurredImageView setImageToBlur:background blurRadius:10 completionBlock:nil];
+    [self.view addSubview:self.blurredImageView];
+    
+    self.tableView = [[UITableView alloc] init];
+    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.separatorColor = [UIColor colorWithWhite:1 alpha:0.2];
+    self.tableView.pagingEnabled = YES;
+    [self.view addSubview:self.tableView];
+    
+    self.tableView.tableHeaderView = self.headerView;
+    self.tableView.tableFooterView = self.footView;
     [self.view addSubview:self.tableView];
 }
 
@@ -185,10 +190,9 @@
 
 - (void)Forecast {
     NSArray *forecast = self.mydata.forecast;
-    forecastPart *tadayPart = forecast[0];
+    ForecastPart *tadayPart = forecast[0];
     self.tadayPart = tadayPart;
-    self.tempLabel.text = self.tadayPart.low;
-    for (forecastPart *cast in forecast) {
+    for (ForecastPart *cast in forecast) {
         NSLog(@"%@",cast);
     }
    

@@ -63,7 +63,7 @@
 		E6E0C4801D1D11B100888F44 /* area.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E0C47F1D1D11B100888F44 /* area.m */; };
 		E6E360EC1D1C3F1F005C66D7 /* WeatherData.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E360EB1D1C3F1F005C66D7 /* WeatherData.m */; };
 		E6E360F01D1C47EE005C66D7 /* MyData.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E360EF1D1C47EE005C66D7 /* MyData.m */; };
-		E6E360F31D1C4D5F005C66D7 /* forecastPart.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E360F21D1C4D5F005C66D7 /* forecastPart.m */; };
+		E6E360F31D1C4D5F005C66D7 /* ForecastPart.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E360F21D1C4D5F005C66D7 /* ForecastPart.m */; };
 		E6E911B21D1CE50100310FD9 /* Yesterday.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E911B11D1CE50100310FD9 /* Yesterday.m */; };
 /* End PBXBuildFile section */
 
@@ -157,8 +157,8 @@
 		E6E360EB1D1C3F1F005C66D7 /* WeatherData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherData.m; sourceTree = "<group>"; };
 		E6E360EE1D1C47EE005C66D7 /* MyData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyData.h; sourceTree = "<group>"; };
 		E6E360EF1D1C47EE005C66D7 /* MyData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyData.m; sourceTree = "<group>"; };
-		E6E360F11D1C4D5F005C66D7 /* forecastPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = forecastPart.h; sourceTree = "<group>"; };
-		E6E360F21D1C4D5F005C66D7 /* forecastPart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = forecastPart.m; sourceTree = "<group>"; };
+		E6E360F11D1C4D5F005C66D7 /* ForecastPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForecastPart.h; sourceTree = "<group>"; };
+		E6E360F21D1C4D5F005C66D7 /* ForecastPart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastPart.m; sourceTree = "<group>"; };
 		E6E911B01D1CE50100310FD9 /* Yesterday.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Yesterday.h; sourceTree = "<group>"; };
 		E6E911B11D1CE50100310FD9 /* Yesterday.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Yesterday.m; sourceTree = "<group>"; };
 		F111F8382A797663AE4E72DD /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -333,8 +333,8 @@
 				E6E360EB1D1C3F1F005C66D7 /* WeatherData.m */,
 				E6E360EE1D1C47EE005C66D7 /* MyData.h */,
 				E6E360EF1D1C47EE005C66D7 /* MyData.m */,
-				E6E360F11D1C4D5F005C66D7 /* forecastPart.h */,
-				E6E360F21D1C4D5F005C66D7 /* forecastPart.m */,
+				E6E360F11D1C4D5F005C66D7 /* ForecastPart.h */,
+				E6E360F21D1C4D5F005C66D7 /* ForecastPart.m */,
 				E6E911B01D1CE50100310FD9 /* Yesterday.h */,
 				E6E911B11D1CE50100310FD9 /* Yesterday.m */,
 				E6E0C47E1D1D11B100888F44 /* area.h */,
@@ -588,7 +588,7 @@
 				E607A9931D1BE27E005713DC /* main.m in Sources */,
 				E6CF56021D1C1C4E001C75BC /* Foundation+Log.m in Sources */,
 				E6E360F01D1C47EE005C66D7 /* MyData.m in Sources */,
-				E6E360F31D1C4D5F005C66D7 /* forecastPart.m in Sources */,
+				E6E360F31D1C4D5F005C66D7 /* ForecastPart.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

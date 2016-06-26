@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface forecastPart : NSObject
+@interface ForecastPart : NSObject
 
 @property (nonatomic, copy) NSString *date;
 @property (nonatomic, copy) NSString *type;

@@ -11,7 +11,7 @@
 #import "ZSRTadayModel.h"
 @interface ZSRTadayView()
 //城市
-//@property (nonatomic, weak)UILabel *cityLabel;
+@property (nonatomic, weak)UILabel *cityLabel;
 
 //实时温度
 @property (nonatomic, weak)UILabel *temperLabel;
@@ -111,8 +111,8 @@
         }];
         
         [conditionsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(self.mas_bottom).offset(-20);
-            make.top.equalTo(iconView.mas_bottom).offset(0);
+            make.right.equalTo(iconView.mas_left).offset(-10);
+            make.top.equalTo(iconView.mas_top).offset(0);
             make.width.mas_equalTo(100);
             make.height.mas_equalTo(50);
         }];
@@ -138,7 +138,7 @@
     _model = model;
     self.cityLabel.text = model.city;
     self.conditionsLabel.text = model.conditions;
-    self.temperLabel.text = model.wendu;
+    self.temperLabel.text = [model.wendu stringByAppendingString:@"°"];
     self.aqiLabel.text = model.aqi;
     self.ganmaoLabel.text = model.ganmao;
     

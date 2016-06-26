@@ -14,5 +14,4 @@
 
 @interface ZSRTadayView : UIView
 @property (nonatomic, strong) ZSRTadayModel* model;
-@property (nonatomic, weak)UILabel *cityLabel;
 @end
