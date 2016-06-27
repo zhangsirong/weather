@@ -128,7 +128,7 @@
         [aqiLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(ganmaoLabel.mas_top).offset(-20);
             make.left.equalTo(self.mas_left).offset(20);
-            make.width.mas_equalTo(50);
+            make.width.mas_equalTo(80);
             make.height.mas_equalTo(20);
         }];
     }

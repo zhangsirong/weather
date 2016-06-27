@@ -21,22 +21,21 @@
 #import "ZSRTadayView.h"
 #import "ZSRTadayModel.h"
 #import "ZSRWeatherCell.h"
-
+#import "ZSRTadayManage.h"
+#import "ZSRToolBar.h"
+#import "ZSREditController.h"
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) MyData *mydata;
 @property (nonatomic, strong) NSArray *areas;
 @property (nonatomic, strong) ForecastPart *tadayPart;
-@property (nonatomic, weak) UIView *headTempView;
 @property (nonatomic, strong) UITableView *tableView;
-
-@property (nonatomic, weak) UILabel *tempLabel;
 
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, strong) UIImageView *blurredImageView;
 @property (nonatomic, strong) ZSRTadayView *headerView;
-@property (nonatomic, strong) UIView *footView;
-//@property (nonatomic, strong) ZSRTadayModel *model;
+@property (nonatomic, strong) NSArray *forecasts;
 
+@property (nonatomic,strong) ZSRToolBar *toolBar;
 
 
 @end
@@ -49,11 +48,18 @@
     }
     return self;
 }
+-(NSArray *)forecasts{
+    
+    if (_forecasts == nil) {
+        _forecasts = [[NSArray alloc] init];
+    }
+    return _forecasts;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setupSubViews];
     [self requestData];
+    [self setupSubViews];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -62,7 +68,7 @@
     CGRect bounds = self.view.bounds;
     self.backgroundImageView.frame = bounds;
     self.blurredImageView.frame = bounds;
-    self.tableView.frame = bounds;
+    self.tableView.frame = CGRectMake(0, 0, sWidth, sHeight-44);
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -79,75 +85,17 @@
     return _headerView;
 }
 
--(UIView *)footView{
-    if (_footView == nil) {
-        _footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, sWidth, sHeight/2)];
-    }
-    return _footView;
-}
-
-
-- (UIView *)headView{
-    
-    UIView *headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, sWidth, sHeight / 2)];
-    headView.backgroundColor = [UIColor orangeColor];
-    [headView addSubview:self.headTempView];
-    return headView;
-    
-}
-
-- (UIView *)headTempView{
-    UIView *headTempView = [[UIView alloc] initWithFrame:CGRectMake(20, 20, 200, 200)];
-    headTempView.backgroundColor = [UIColor blueColor];
-    UILabel *tempLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    tempLabel.backgroundColor = [UIColor clearColor];
-    
-    UIImageView *tickImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cloudy1"]];
-    tickImage.backgroundColor = [UIColor blackColor];
-    tempLabel.text = @"35";
-    [headTempView addSubview:tickImage];
-    [headTempView addSubview:tempLabel];
-    
-    return headTempView;
-}
-
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
     ZSRWeatherCell *cell = [ZSRWeatherCell weatherCellWithTableView:tableView];
-    switch (indexPath.row) {
-        case 0:{
-            
-//            cell.textLabel.text =  self.tadayPart.low;
-//            cell.textLabel.backgroundColor = [UIColor grayColor];
-//            cell.textLabel.textColor = [UIColor redColor];
-//            cell.imageView.image = [UIImage imageNamed:@"cloudy1"];
-//            cell.detailTextLabel.text = self.tadayPart.type;
-//            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
-//            label.text = self.tadayPart.low;
-////            label.backgroundColor = [UIColor redColor];
-//            self.tempLabel = label;
-//            cell.accessoryView =self.tempLabel;
-        }
-            break;
-        case 1:
-//            cell.textLabel.text = @"2555";
-            break;
-        case 2:
-//            cell.textLabel.text = @"2555";
-            break;
-        case 3:
-//            cell.textLabel.text = @"2555";
-            break;
-        default:
-            break;
-    }
+    cell.forecastPartModel = self.forecasts[indexPath.row];
     return cell;
 
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 5;
+   return self.forecasts.count;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -161,8 +109,9 @@
 
 
 -(void)setupSubViews{
-//    [self.view addSubview:self.headView];
-    UIImage *background = [UIImage imageNamed:@"bg"];
+
+    
+    UIImage *background = [UIImage imageNamed:@"bg1.jpg"];
     self.backgroundImageView = [[UIImageView alloc] initWithImage:background];
     self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     [self.view addSubview:self.backgroundImageView];
@@ -182,29 +131,51 @@
     [self.view addSubview:self.tableView];
     
     self.tableView.tableHeaderView = self.headerView;
-    self.tableView.tableFooterView = self.footView;
     [self.view addSubview:self.tableView];
+    
+    ZSRToolBar *toolBar = [[ZSRToolBar alloc] initWithFrame:CGRectMake(0, sHeight-44, sWidth, 44)];
+    
+    UIPageControl *pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(20, 0, sWidth-40, 44)];
+    pageControl.numberOfPages = 2;
+    pageControl.currentPage = 0;
+    pageControl.tintColor = [UIColor clearColor];
+    pageControl.enabled = YES;
+    [toolBar addSubview:pageControl];
+    
+    UIButton *editButton = [[UIButton alloc] initWithFrame:CGRectMake(sWidth-44, 0, 44, 44)];
+    [editButton setTitle:@"编辑" forState:UIControlStateNormal];
+    [editButton addTarget:self action:@selector(buttonClick) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:editButton];
+    
+    UIView  *flexView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, sWidth - editButton.frame.size.width - 30, 44)];
+    
+    UIBarButtonItem *fixedSpaceBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:flexView]
+    ;
+    fixedSpaceBarButtonItem.enabled = NO;
+
+    
+    [toolBar setItems:[NSArray arrayWithObjects:fixedSpaceBarButtonItem, item, nil]];
+    toolBar.backgroundColor = [UIColor clearColor];
+    toolBar.barTintColor = [UIColor clearColor];
+    toolBar.translucent = YES;
+    toolBar.barStyle =UIBarStyleDefault;
+    self.toolBar = toolBar;
+    [self.view addSubview:toolBar];
+    
+
+}
+-(void)buttonClick{
+    [self presentViewController:[[ZSREditController alloc] init] animated:YES completion:nil
+     
+     ];
 }
 
 
 
 - (void)Forecast {
-    NSArray *forecast = self.mydata.forecast;
-    ForecastPart *tadayPart = forecast[0];
-    self.tadayPart = tadayPart;
-    for (ForecastPart *cast in forecast) {
-        NSLog(@"%@",cast);
-    }
-   
-    ZSRTadayModel *model = [[ZSRTadayModel alloc]init];
-    model.wendu = self.mydata.wendu;
-    model.city = self.mydata.city;
-    model.ganmao = self.mydata.ganmao;
-    model.aqi = self.mydata.aqi;
-    model.conditions = tadayPart.type;
-    self.headerView.model = model;
-    
-    
+    self.forecasts = self.mydata.forecast;
+
+    self.headerView.model = [ZSRTadayManage tadayWeatherWithMyData:self.mydata];
     NSString *wendu = self.mydata.wendu;
     NSString *ganmao = self.mydata.ganmao;
     NSString *aqi = self.mydata.aqi;
@@ -218,8 +189,7 @@
 -(void)requestData{
     self.areas = [area areaList];
     for (int i = 0; i<self.areas.count; i++) {
-//        area *myarea = self.areas[i];
-//        NSLog(@"%@",myarea.areaid);
+        
     }
     NSString *URLString = @"http://wthrcdn.etouch.cn/weather_mini";
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
@@ -245,6 +215,9 @@
         
         weakSelf.mydata = weather.data;
         [weakSelf Forecast];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@",error);

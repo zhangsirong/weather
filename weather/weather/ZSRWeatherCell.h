@@ -10,7 +10,7 @@
 @class ForecastPart;
 @interface ZSRWeatherCell : UITableViewCell
 
-@property (nonatomic,strong) ForecastPart *forecastModel;
+@property (nonatomic,strong) ForecastPart *forecastPartModel;
 + (instancetype)weatherCellWithTableView:(UITableView *)tableview;
 
 @end

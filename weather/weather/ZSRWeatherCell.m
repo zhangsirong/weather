@@ -158,13 +158,15 @@
     return self;
 }
 
--(void)setForecastModel:(ForecastPart *)forecastModel{
-    _forecastModel = forecastModel;
+-(void)setForecastPartModel:(ForecastPart *)forecastModel{
+    _forecastPartModel = forecastModel;
     self.timeLabel.text = forecastModel.date;
     self.conditionsLabel.text = forecastModel.type;
     self.fengXLabel.text = forecastModel.fengxiang;
     self.fengLLabel.text = forecastModel.fengli;
-    self.wenduLabel.text = [NSString stringWithFormat:@"%@/%@",forecastModel.high,forecastModel.low];
+    
+    
+    self.wenduLabel.text = [NSString stringWithFormat:@"%@°/%@°",[forecastModel.high substringWithRange:NSMakeRange(3, 2)],[forecastModel.low substringWithRange:NSMakeRange(3, 2) ]];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
