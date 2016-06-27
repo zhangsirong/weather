@@ -7,6 +7,7 @@
 //
 
 #import "ZSREditController.h"
+#import "MyData.h"
 @interface ZSREditController()<UITableViewDataSource,UITabBarDelegate>
 
 
@@ -29,21 +30,25 @@
     static NSString *ID = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:ID];
     }
+    MyData *myData = self.dataSource[indexPath.row];
     
-    cell.textLabel.text = @"天气预报";
-    
+    cell.textLabel.text = myData.city;
+    cell.detailTextLabel.text = myData.wendu;
     return cell;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    return self.dataSource.count;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if ([self.delegate respondsToSelector:@selector(editControllerView:didSelectRowAtIndexPath:)]) {
+        [self.delegate editControllerView:self didSelectRowAtIndexPath:indexPath];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }    
 }
 
 
