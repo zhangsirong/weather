@@ -13,7 +13,10 @@
 #import "ZSRTadayView.h"
 #import "ZSRPageView.h"
 #import "MyData.h"
-@interface ZSRMainViewController ()<UIScrollViewDelegate,ZSREditControllerDelegate>
+#import "INTULocationManager.h"
+
+
+@interface ZSRMainViewController ()<UIScrollViewDelegate,ZSREditControllerDelegate,CLLocationManagerDelegate>
 
 @property (nonatomic, strong) NSArray *areas;
 
@@ -23,6 +26,7 @@
 @property (nonatomic, strong) NSMutableArray *pageViews;
 @property (nonatomic, strong) NSMutableArray *myDatas;
 @property (nonatomic, strong) ZSREditController *editController;
+@property (nonatomic, strong) CLPlacemark* placemark;
 
 @end
 
@@ -103,7 +107,47 @@
 }
 
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.areas = [ZSRArea areaList];
+    [self searchLocation];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange:) name:@"CityChange" object:nil];
 
+  }
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    
+    [super viewWillAppear:animated];
+    
+    
+}
+
+- (void)searchLocation {
+    INTULocationManager *locMgr = [INTULocationManager sharedInstance];
+    [locMgr requestLocationWithDesiredAccuracy:INTULocationAccuracyCity timeout:10.0 delayUntilAuthorized:YES block:^(CLLocation *currentLocation, INTULocationAccuracy achievedAccuracy, INTULocationStatus status) {
+        if (status == INTULocationStatusSuccess) {
+            [[[CLGeocoder alloc] init] reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+                for (CLPlacemark *placemark in placemarks) {
+                    self.placemark = placemark;
+                    NSLog(@"%@ %@ %f %f", placemark.subLocality, placemark.addressDictionary, placemark.location.coordinate.latitude, placemark.location.coordinate.longitude);
+                    [self setupSubViews];
+                }
+            }];
+        }
+        else if (status == INTULocationStatusTimedOut) {
+            
+        }
+        else {
+        }
+        
+    }];
+}
 // 分页控件的监听方法
 - (void)pageChanged:(UIPageControl *)page
 {
@@ -114,43 +158,32 @@
     [self.scrollView setContentOffset:CGPointMake(x, 0) animated:YES];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self setupSubViews];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange:) name:@"CityChange" object:nil];
-    
-}
--(void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
 
-}
-
-- (void)viewWillAppear:(BOOL)animated{
-    
-    [super viewWillAppear:animated];
-   
-
-}
 
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
 }
+
+
     
 -(void)setupSubViews{
     
     [self.view addSubview:self.scrollView];
-    
     [self.view addSubview:self.pageControl];
-    ZSRPageView *firstView = [[ZSRPageView alloc] initWithCity:@"北京"];
-    ZSRPageView *secondView = [[ZSRPageView alloc] initWithCity:@"上海"];
-    ZSRPageView *thirdView = [[ZSRPageView alloc] initWithCity:@"连平"];
+    
+    NSString *cityName = @"";
+    NSString *realSubLocality = [self.placemark.subLocality substringWithRange:NSMakeRange(0, self.placemark.subLocality.length-1)];
+    NSString *realCity = [self.placemark.locality substringWithRange:NSMakeRange(0, self.placemark.locality.length-1)];
+    
+    for (ZSRArea *area in self.areas) {
+        cityName = [area.namecn isEqualToString:realSubLocality] ? realSubLocality : realCity;
+    }
+    ZSRPageView *firstView = [[ZSRPageView alloc] initWithCity:cityName];
+
 
 
     [self.pageViews addObject:firstView];
-    [self.pageViews addObject:secondView];
-    [self.pageViews addObject:thirdView];
     
     for (ZSRPageView *pageView in self.pageViews) {
         [self.scrollView addSubview:pageView];
@@ -236,8 +269,6 @@
         [self.editController refreshDataSource];
 
     }];
-    
-    
     CGRect frame = pageView.frame;
     frame.origin.x = self.pageViews.count * frame.size.width;
     pageView.frame = frame;

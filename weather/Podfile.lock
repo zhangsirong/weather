@@ -14,18 +14,21 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
+  - INTULocationManager (4.2.0)
   - LBBlurredImage (0.2.2)
   - Masonry (1.0.1)
   - MJExtension (3.0.10)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.1.0)
+  - INTULocationManager (~> 4.2.0)
   - LBBlurredImage (~> 0.2.2)
   - Masonry (= 1.0.1)
   - MJExtension (~> 3.0.10)
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  INTULocationManager: 73f8254b3d05c897c56bb13c190e5b7c648c0998
   LBBlurredImage: 700634c17922bc2d22343118e7deb6a3ca12db43
   Masonry: a1a931a0d08870ed8ae415a2ea5ea68ebcac77df
   MJExtension: d86aacb740c87519d20e3cca55b6fa4be6cc7548
