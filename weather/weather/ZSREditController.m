@@ -8,9 +8,8 @@
 
 #import "ZSREditController.h"
 #import "MyData.h"
+#import "ZSRAddCityController.h"
 @interface ZSREditController()<UITableViewDataSource,UITabBarDelegate>
-
-
 
 @end
 
@@ -18,6 +17,24 @@
 -(void)viewDidLoad{
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor redColor];
+    
+    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(20, 20, self.view.bounds.size.width-40,40)];
+    btn.backgroundColor = [UIColor greenColor];
+    [btn setTitle:@"添加城市" forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(addCity) forControlEvents:UIControlEventTouchUpInside];
+    self.tableView.tableFooterView = btn;
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [self.tableView reloadData];
+}
+
+-(void)addCity{
+    ZSRAddCityController *Vc = [[ZSRAddCityController alloc] init];
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:Vc];
+    [self presentViewController:nav animated:YES completion:nil];
     
 }
 
@@ -27,7 +44,7 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *ID = @"cell";
+    static NSString *ID = @"editCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:ID];
@@ -45,6 +62,7 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     if ([self.delegate respondsToSelector:@selector(editControllerView:didSelectRowAtIndexPath:)]) {
         [self.delegate editControllerView:self didSelectRowAtIndexPath:indexPath];
         [self dismissViewControllerAnimated:YES completion:nil];
@@ -52,4 +70,27 @@
 }
 
 
+-(void)refreshDataSource{
+    [self.tableView reloadData];
+    
+}
+-(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    return YES;
+    
+}
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"%ld",indexPath.row);
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        if ([self.delegate respondsToSelector:@selector(editControllerView:deleteRowAtIndexPath:)]) {
+            [self.delegate editControllerView:self deleteRowAtIndexPath:indexPath];
+        }
+        [self.tableView reloadData];
+    }
+    
+}
+
+-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return UITableViewCellEditingStyleDelete;
+}
 @end

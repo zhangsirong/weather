@@ -6,14 +6,14 @@
 //  Copyright © 2016 hp. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "ZSRMainViewController.h"
 #import "Foundation+Log.h"
-#import "area.h"
+#import "ZSRArea.h"
 #import "ZSREditController.h"
 #import "ZSRTadayView.h"
 #import "ZSRPageView.h"
 #import "MyData.h"
-@interface ViewController ()<UIScrollViewDelegate,ZSREditControllerDelegate>
+@interface ZSRMainViewController ()<UIScrollViewDelegate,ZSREditControllerDelegate>
 
 @property (nonatomic, strong) NSArray *areas;
 
@@ -24,10 +24,9 @@
 @property (nonatomic, strong) NSMutableArray *myDatas;
 @property (nonatomic, strong) ZSREditController *editController;
 
-
 @end
 
-@implementation ViewController
+@implementation ZSRMainViewController
 
 
 -(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
@@ -64,7 +63,7 @@
     if (_scrollView == nil) {
         _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, sWidth, self.view.frame.size.height)];
         _scrollView.backgroundColor = [UIColor redColor];
-        // 取消弹簧效果
+        // 有弹簧效果
         _scrollView.bounces = YES;
         // 取消水平滚动条
         _scrollView.showsHorizontalScrollIndicator = NO;
@@ -72,7 +71,7 @@
         // 要分页
         _scrollView.pagingEnabled = YES;
         // contentSize
-        _scrollView.contentSize = CGSizeMake(3 * _scrollView.bounds.size.width, 0);
+        _scrollView.contentSize = CGSizeMake(1 * _scrollView.bounds.size.width, 0);
         // 设置代理
         _scrollView.delegate = self;
     }
@@ -117,32 +116,37 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    [self requestData];
     [self setupSubViews];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange:) name:@"CityChange" object:nil];
+    
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    [self.myDatas removeAllObjects];
-    for (ZSRPageView *pageView in self.pageViews) {
-        [self.scrollView addSubview:pageView];
-        [self.myDatas addObject:pageView.mydata];
-    }
+
 }
+
+- (void)viewWillAppear:(BOOL)animated{
+    
+    [super viewWillAppear:animated];
+   
+
+}
+
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
 }
+    
 -(void)setupSubViews{
     
     [self.view addSubview:self.scrollView];
     
     [self.view addSubview:self.pageControl];
-    ZSRPageView *firstView = [[ZSRPageView alloc] initWithFrame:self.view.bounds];
-    firstView.city = @"北京";
-    ZSRPageView *secondView = [[ZSRPageView alloc] initWithFrame:self.view.bounds];
-    secondView.city = @"广州";
-    ZSRPageView *thirdView = [[ZSRPageView alloc] initWithFrame:self.view.bounds];
-    thirdView.city = @"连平";
+    ZSRPageView *firstView = [[ZSRPageView alloc] initWithCity:@"北京"];
+    ZSRPageView *secondView = [[ZSRPageView alloc] initWithCity:@"上海"];
+    ZSRPageView *thirdView = [[ZSRPageView alloc] initWithCity:@"连平"];
+
 
     [self.pageViews addObject:firstView];
     [self.pageViews addObject:secondView];
@@ -157,20 +161,27 @@
         frame.origin.x = idx * frame.size.width ;
         pageView.frame = frame;
     }];
-    
+    self.scrollView.contentSize = CGSizeMake(self.pageViews.count * self.scrollView.bounds.size.width, 0);
     self.pageControl.numberOfPages = self.pageViews.count;
     UIButton *editButton = [[UIButton alloc] initWithFrame:CGRectMake(sWidth-44, sHeight-44, 44, 44)];
     [editButton setTitle:@"编辑" forState:UIControlStateNormal];
     [editButton addTarget:self action:@selector(buttonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:editButton];
-    
-    
-
 }
+
 -(void)buttonClick{
+    
+    [self.myDatas removeAllObjects];
+    for (ZSRPageView *pageView in self.pageViews) {
+        [self.scrollView addSubview:pageView];
+        [self.myDatas addObject:pageView.mydata];
+    }
     self.editController.dataSource = self.myDatas;
     [self presentViewController:self.editController animated:YES completion:nil];
 }
+
+
+#pragma mark - ZSREditControllerDelegate
 
 -(void)editControllerView:(ZSREditController *)controller didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -178,54 +189,30 @@
     self.scrollView.contentOffset = CGPointMake(sWidth * indexPath.row, 0);
 }
 
--(void)loadText{
+-(void)editControllerView:(ZSREditController *)controller deleteRowAtIndexPath:(NSIndexPath *)indexPath{
+    [self.myDatas removeObjectAtIndex:indexPath.row];
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"area" ofType:@"txt"];
+    ZSRPageView *removeView =  self.pageViews[indexPath.row];
+    [removeView removeFromSuperview];
     
-    NSString *contents = [[NSString alloc] initWithContentsOfFile:path encoding:NSUnicodeStringEncoding error:nil];
-    NSArray *contentsArray = [contents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    [self.pageViews removeObject:removeView];
     
-    //    NSString *path = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"txt"];
-    //    NSString *contents = [[NSString alloc] initWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    ////    NSArray *contentsArray = [contents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-    //    NSArray *contentsArray = [contents componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\r\n"]];
-    NSMutableArray *mutableArray = [NSMutableArray array];
-    
-    for (int i = 0; i<contentsArray.count; i++) {
-        NSString *constString = contentsArray[i];
-        if (constString.length > 0 ) {
-            [mutableArray addObject:constString];
-        }
+    for (ZSRPageView *pageView in self.pageViews) {
+        [self.scrollView addSubview:pageView];
     }
-    
-    NSString *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-    NSString *filePath = [docPath stringByAppendingPathComponent:@"data.plist"];
-    
-    NSMutableArray *arr = [[NSMutableArray alloc] init];
-    
-    NSInteger idx;
-    for (idx = 0; idx < mutableArray.count; idx++) {
-        NSString* currentContent = [mutableArray objectAtIndex:idx];
-        NSArray* timeDataArr = [currentContent componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setObject:[timeDataArr objectAtIndex:0] forKey:@"areaid"];
-        [dic setObject:[timeDataArr objectAtIndex:1] forKey:@"nameen"];
-        [dic setObject:[timeDataArr objectAtIndex:2] forKey:@"namecn"];
-        [dic setObject:[timeDataArr objectAtIndex:3] forKey:@"districten"];
-        [dic setObject:[timeDataArr objectAtIndex:4] forKey:@"districtcn"];
-        [dic setObject:[timeDataArr objectAtIndex:5] forKey:@"proven"];
-        [dic setObject:[timeDataArr objectAtIndex:6] forKey:@"provcn"];
-        [dic setObject:[timeDataArr objectAtIndex:7] forKey:@"nationzn"];
-        [dic setObject:[timeDataArr objectAtIndex:8] forKey:@"nationcn"];
+    [self.scrollView.subviews enumerateObjectsUsingBlock:^(ZSRPageView *pageView, NSUInteger idx, BOOL *stop) {
         
-        
-        
-        [arr addObject:dic];
-    }
-    [arr writeToFile:filePath atomically:YES];
+        CGRect frame = pageView.frame;
+        frame.origin.x = idx * frame.size.width ;
+        pageView.frame = frame;
+    }];
+    self.scrollView.contentSize = CGSizeMake(self.pageViews.count * self.scrollView.bounds.size.width, 0);
+    self.pageControl.numberOfPages = self.pageViews.count;
 
+    
+    
+    
 }
-
 
 #pragma mark - UIScrollViewDelegate
 // 滚动视图停下来，修改页面控件的小点（页数）
@@ -235,4 +222,31 @@
     int page = scrollView.contentOffset.x / scrollView.bounds.size.width;
     self.pageControl.currentPage = page;
 }
+
+#pragma mark - 城市改变通知
+-(void)cityChange:(NSNotification*)note
+{
+    NSDictionary *userInfo = note.userInfo;
+    NSString *cityName = [userInfo objectForKey:@"city"];
+    ZSRPageView *pageView = [[ZSRPageView alloc] initWithCity:cityName];
+    [pageView requestData:cityName completion:^{
+        
+        [self.myDatas addObject:pageView.mydata];
+        self.editController.dataSource = self.myDatas;
+        [self.editController refreshDataSource];
+
+    }];
+    
+    
+    CGRect frame = pageView.frame;
+    frame.origin.x = self.pageViews.count * frame.size.width;
+    pageView.frame = frame;
+    
+    [self.pageViews addObject:pageView];
+    self.pageControl.numberOfPages  = self.pageViews.count;
+    _scrollView.contentSize = CGSizeMake(self.pageViews.count * _scrollView.bounds.size.width, 0);
+    [self.scrollView addSubview:pageView];
+}
+
+
 @end

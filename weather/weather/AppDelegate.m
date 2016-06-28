@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 #import "Foundation+Log.h"
-#import "ViewController.h"
+#import "ZSRMainViewController.h"
 @interface AppDelegate ()
 
 @end

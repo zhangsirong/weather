@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface area : NSObject
+@interface ZSRArea : NSObject
 
 @property (nonatomic, copy) NSString *areaid;
 @property (nonatomic, copy) NSString *districtcn;

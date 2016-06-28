@@ -32,6 +32,15 @@
     return self;
 }
 
+-(instancetype)initWithCity:(NSString *)city{
+    
+    if (self = [self initWithFrame:CGRectMake(0, 0, sWidth, sHeight)]) {
+        self.city = city;
+    }
+    return self;
+}
+
+
 -(NSArray *)forecasts{
     
     if (_forecasts == nil) {
@@ -116,6 +125,19 @@
 }
 
 -(void)requestData:(NSString *)city{
+    [self requestData:city completion:^{
+        [self.tableView reloadData];
+    }];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat height = scrollView.bounds.size.height/2;
+    CGFloat position = MAX(scrollView.contentOffset.y, 0.0);
+    CGFloat percent = MIN(position / height, 1.0);
+    self.blurredImageView.alpha = percent;
+}
+
+-(void)requestData:(NSString *)city completion: (void (^ __nullable)(void))completion{
     NSString *URLString = @"http://wthrcdn.etouch.cn/weather_mini";
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
     dict[@"city"] = city;
@@ -125,27 +147,19 @@
     
     NSURLSessionDataTask * task = [httpManager GET:URLString parameters:dict progress:^(NSProgress * _Nonnull downloadProgress) {
         
-    } success:^(NSURLSessionDataTask * _Nonnull task, NSData* data) {
+    }
+    success:^(NSURLSessionDataTask * _Nonnull task, NSData* data) {
+           
+           NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+           // MJExtension框架里,字典转模型的方法
+           WeatherData *weather = [WeatherData mj_objectWithKeyValues:dict];
+           self.mydata = weather.data;
+           dispatch_async(dispatch_get_main_queue(), completion);
         
-            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-            // MJExtension框架里,字典转模型的方法
-            WeatherData *weather = [WeatherData mj_objectWithKeyValues:dict];
-            self.mydata = weather.data;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
-            });
-
+           
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@",error);
     }];
     [task resume];
-
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat height = scrollView.bounds.size.height/2;
-    CGFloat position = MAX(scrollView.contentOffset.y, 0.0);
-    CGFloat percent = MIN(position / height, 1.0);
-    self.blurredImageView.alpha = percent;
 }
 @end

@@ -12,13 +12,16 @@
 @required
 
 -(void)editControllerView:(ZSREditController*)controller didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+-(void)editControllerView:(ZSREditController*)controller deleteRowAtIndexPath:(NSIndexPath *)indexPath;
+
 @end
 
 
 @interface ZSREditController : UITableViewController
 
-@property (nonatomic,strong) NSArray *dataSource;
+@property (nonatomic,strong) NSMutableArray *dataSource;
 @property (nonatomic, weak) id<ZSREditControllerDelegate> delegate;
+-(void)refreshDataSource;
 
 @end
 

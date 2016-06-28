@@ -6,9 +6,9 @@
 //  Copyright © 2016 hp. All rights reserved.
 //
 
-#import "area.h"
+#import "ZSRArea.h"
 
-@implementation area
+@implementation ZSRArea
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     self = [super init];
@@ -29,9 +29,11 @@
     
     NSMutableArray *arrayM = [NSMutableArray array];
     for (NSDictionary *dict in array) {
-        [arrayM addObject:[area areaWithDict:dict]];
+        [arrayM addObject:[ZSRArea areaWithDict:dict]];
     }
     return arrayM;
 }
 
+-(NSString *)description{
+    return [NSString stringWithFormat:@"%@-%@，%@",self.namecn,self.districtcn,self.provcn];}
 @end
