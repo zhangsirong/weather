@@ -17,6 +17,7 @@ PODS:
   - INTULocationManager (4.2.0)
   - LBBlurredImage (0.2.2)
   - Masonry (1.0.1)
+  - MBProgressHUD (0.9.2)
   - MJExtension (3.0.10)
 
 DEPENDENCIES:
@@ -24,6 +25,7 @@ DEPENDENCIES:
   - INTULocationManager (~> 4.2.0)
   - LBBlurredImage (~> 0.2.2)
   - Masonry (= 1.0.1)
+  - MBProgressHUD (~> 0.9.2)
   - MJExtension (~> 3.0.10)
 
 SPEC CHECKSUMS:
@@ -31,6 +33,7 @@ SPEC CHECKSUMS:
   INTULocationManager: 73f8254b3d05c897c56bb13c190e5b7c648c0998
   LBBlurredImage: 700634c17922bc2d22343118e7deb6a3ca12db43
   Masonry: a1a931a0d08870ed8ae415a2ea5ea68ebcac77df
+  MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   MJExtension: d86aacb740c87519d20e3cca55b6fa4be6cc7548
 
 COCOAPODS: 0.39.0

@@ -50,7 +50,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>iOS8后台请求授权</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>天气应用需要定位</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>天气应用需要定位</string>
 </dict>
 </plist>

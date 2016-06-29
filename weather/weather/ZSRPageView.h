@@ -13,6 +13,6 @@
 @property (nonatomic, strong,nonnull) MyData *mydata;
 @property (nonatomic, strong,nonnull) UITableView *tableView;
 @property (nonatomic, strong,nonnull) NSString *city;
--(void)requestData:(nonnull NSString *)city completion: (void (^ __nullable)(void))completion;
+//-(void)requestData:(nonnull NSString *)city completion: (void (^ __nullable)(void))completion;
 -(instancetype)initWithCity:(nonnull NSString *)city;
 @end

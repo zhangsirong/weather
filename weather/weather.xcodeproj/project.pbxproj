@@ -65,6 +65,8 @@
 		E6BCFF8B1D1E57A9001320E7 /* ZSRTadayView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BCFF8A1D1E57A9001320E7 /* ZSRTadayView.m */; };
 		E6BCFF8E1D1E6FD5001320E7 /* ZSRTadayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BCFF8D1D1E6FD5001320E7 /* ZSRTadayModel.m */; };
 		E6CF56021D1C1C4E001C75BC /* Foundation+Log.m in Sources */ = {isa = PBXBuildFile; fileRef = E6CF56011D1C1C4E001C75BC /* Foundation+Log.m */; };
+		E6DEB4A21D239725007EDF5B /* MBProgressHUD+ZSR.m in Sources */ = {isa = PBXBuildFile; fileRef = E6DEB4A11D239725007EDF5B /* MBProgressHUD+ZSR.m */; };
+		E6DEB4A51D23B41A007EDF5B /* ZSRHttpTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E6DEB4A41D23B41A007EDF5B /* ZSRHttpTool.m */; };
 		E6E0C47D1D1D112100888F44 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = E6E0C47C1D1D112100888F44 /* area.plist */; };
 		E6E0C4801D1D11B100888F44 /* ZSRArea.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E0C47F1D1D11B100888F44 /* ZSRArea.m */; };
 		E6E360EC1D1C3F1F005C66D7 /* WeatherData.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E360EB1D1C3F1F005C66D7 /* WeatherData.m */; };
@@ -167,6 +169,10 @@
 		E6BCFF8D1D1E6FD5001320E7 /* ZSRTadayModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSRTadayModel.m; sourceTree = "<group>"; };
 		E6CF56011D1C1C4E001C75BC /* Foundation+Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Foundation+Log.m"; sourceTree = "<group>"; };
 		E6CF56031D1C1C82001C75BC /* Foundation+Log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Foundation+Log.h"; sourceTree = "<group>"; };
+		E6DEB4A01D239725007EDF5B /* MBProgressHUD+ZSR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+ZSR.h"; sourceTree = "<group>"; };
+		E6DEB4A11D239725007EDF5B /* MBProgressHUD+ZSR.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+ZSR.m"; sourceTree = "<group>"; };
+		E6DEB4A31D23B41A007EDF5B /* ZSRHttpTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSRHttpTool.h; sourceTree = "<group>"; };
+		E6DEB4A41D23B41A007EDF5B /* ZSRHttpTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSRHttpTool.m; sourceTree = "<group>"; };
 		E6E0C47C1D1D112100888F44 /* area.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = area.plist; sourceTree = "<group>"; };
 		E6E0C47E1D1D11B100888F44 /* ZSRArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSRArea.h; sourceTree = "<group>"; };
 		E6E0C47F1D1D11B100888F44 /* ZSRArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSRArea.m; sourceTree = "<group>"; };
@@ -289,8 +295,12 @@
 		E619B9131D201E5B00C2911E /* Tool */ = {
 			isa = PBXGroup;
 			children = (
+				E6DEB4A01D239725007EDF5B /* MBProgressHUD+ZSR.h */,
+				E6DEB4A11D239725007EDF5B /* MBProgressHUD+ZSR.m */,
 				E619B9151D201E8B00C2911E /* ZSRTadayManage.h */,
 				E619B9161D201E8B00C2911E /* ZSRTadayManage.m */,
+				E6DEB4A31D23B41A007EDF5B /* ZSRHttpTool.h */,
+				E6DEB4A41D23B41A007EDF5B /* ZSRHttpTool.m */,
 			);
 			name = Tool;
 			sourceTree = "<group>";
@@ -635,7 +645,9 @@
 				E607A9931D1BE27E005713DC /* main.m in Sources */,
 				E619B9251D2045C300C2911E /* ZSREditController.m in Sources */,
 				E6CF56021D1C1C4E001C75BC /* Foundation+Log.m in Sources */,
+				E6DEB4A21D239725007EDF5B /* MBProgressHUD+ZSR.m in Sources */,
 				E674FF671D21F6D700996B8C /* ZSRResultsController.m in Sources */,
+				E6DEB4A51D23B41A007EDF5B /* ZSRHttpTool.m in Sources */,
 				E6E360F01D1C47EE005C66D7 /* MyData.m in Sources */,
 				E6E360F31D1C4D5F005C66D7 /* ForecastPart.m in Sources */,
 				E61A91D61D21501B00248E2B /* ZSRPageView.m in Sources */,

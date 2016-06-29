@@ -14,20 +14,25 @@
 #import "ZSRPageView.h"
 #import "MyData.h"
 #import "INTULocationManager.h"
+#import "MBProgressHUD+ZSR.h"
+#import "AFNetworking.h"
+#import "ZSRHttpTool.h"
+#import "MJExtension.h"
+#import "WeatherData.h"
 
+#define filePath [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:@"localDicts.plist"]
 
 @interface ZSRMainViewController ()<UIScrollViewDelegate,ZSREditControllerDelegate,CLLocationManagerDelegate>
 
 @property (nonatomic, strong) NSArray *areas;
-
 @property (nonatomic, strong) ZSRTadayView *headerView;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIPageControl *pageControl;
+
 @property (nonatomic, strong) NSMutableArray *pageViews;
 @property (nonatomic, strong) NSMutableArray *myDatas;
+@property (nonatomic, strong) NSMutableDictionary *localDicts;
 @property (nonatomic, strong) ZSREditController *editController;
-@property (nonatomic, strong) CLPlacemark* placemark;
-
 @end
 
 @implementation ZSRMainViewController
@@ -40,6 +45,8 @@
     }
     return self;
 }
+
+#pragma mark - getter
 -(ZSREditController *)editController{
     if (_editController == nil) {
         _editController = [[ZSREditController alloc] init];
@@ -53,6 +60,13 @@
         _pageViews = [NSMutableArray arrayWithCapacity:1];
     }
     return _pageViews;
+}
+
+-(NSMutableDictionary *)localDicts{
+    if (_localDicts ==nil) {
+        _localDicts = [NSMutableDictionary dictionaryWithCapacity:1];
+    }
+    return _localDicts;
 }
 
 -(NSMutableArray *)myDatas{
@@ -106,48 +120,120 @@
     return _pageControl;
 }
 
-
+#pragma mark - View
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.areas = [ZSRArea areaList];
-    [self searchLocation];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange:) name:@"CityChange" object:nil];
 
+    self.areas = [ZSRArea areaList];
+    [self networkChange];
+    [self setupSubViews];
+    [self loadRecond];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange:) name:@"CityChange" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willResignActiveNotification) name:UIApplicationWillResignActiveNotification object:nil];
   }
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     
     [super viewWillAppear:animated];
-    
-    
+}
+-(void)dealloc{
+    [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
 }
 
+
+#pragma mark - 定位
 - (void)searchLocation {
     INTULocationManager *locMgr = [INTULocationManager sharedInstance];
     [locMgr requestLocationWithDesiredAccuracy:INTULocationAccuracyCity timeout:10.0 delayUntilAuthorized:YES block:^(CLLocation *currentLocation, INTULocationAccuracy achievedAccuracy, INTULocationStatus status) {
+        //定位成功 到网络获取数据
         if (status == INTULocationStatusSuccess) {
+            [MBProgressHUD hideHUDForView:[self.pageViews firstObject]];
+            [MBProgressHUD showSuccess:@"定位成功"];
+
             [[[CLGeocoder alloc] init] reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+                
                 for (CLPlacemark *placemark in placemarks) {
-                    self.placemark = placemark;
                     NSLog(@"%@ %@ %f %f", placemark.subLocality, placemark.addressDictionary, placemark.location.coordinate.latitude, placemark.location.coordinate.longitude);
-                    [self setupSubViews];
+                    [self locationSuccess:placemark];
+                    
                 }
             }];
         }
-        else if (status == INTULocationStatusTimedOut) {
-            
+        else if(status == INTULocationStatusTimedOut){
+            NSLog(@"INTULocationStatusTimedOut");
         }
-        else {
+        else if (status == INTULocationStatusServicesNotDetermined){
+            NSLog(@"INTULocationStatusServicesNotDetermined");
+
+        }else if (status == INTULocationStatusServicesDenied){
+            NSLog(@"INTULocationStatusServicesDenied");
+        }else if (status == INTULocationStatusServicesRestricted){
+            NSLog(@"INTULocationStatusServicesRestricted");
+
+        }else if (status == INTULocationStatusServicesDisabled){
+            NSLog(@"INTULocationStatusServicesDisabled");
+
+            
+        }else{
+            
         }
         
     }];
 }
+
+- (void)locationSuccess:(CLPlacemark *)placemark {
+    NSString *cityName = @"";
+    NSString *realSubLocality = [placemark.subLocality substringWithRange:NSMakeRange(0, placemark.subLocality.length-1)];
+    NSString *realCity = [placemark.locality substringWithRange:NSMakeRange(0, placemark.locality.length-1)];
+    
+    for (ZSRArea *area in self.areas) {
+        cityName = [area.namecn isEqualToString:realSubLocality] ? realSubLocality : realCity;
+        
+    }
+    
+    ((ZSRPageView *)[self.pageViews firstObject]).city = cityName;
+    [ZSRHttpTool requestDataWithCity:cityName success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable data) {
+
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+        
+        [self.localDicts setObject:dict forKey:cityName];
+        // MJExtension框架里,字典转模型的方法
+        ((ZSRPageView *)[self.pageViews firstObject]).mydata = [WeatherData mj_objectWithKeyValues:dict].data;
+        [((ZSRPageView *)[self.pageViews lastObject]).tableView reloadData];
+        
+    }];
+}
+
+
+-(void)networkChange{
+    AFNetworkReachabilityManager *mgr = [AFNetworkReachabilityManager sharedManager];
+    [mgr setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        // 当网络状态发生改变的时候调用这个block
+        switch (status) {
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+                [self searchLocation];
+                break;
+                
+            case AFNetworkReachabilityStatusNotReachable:
+                [MBProgressHUD showError:@"无网络连接，请检查网络"];
+                break;
+                
+            case AFNetworkReachabilityStatusUnknown:
+                [MBProgressHUD showError:@"未知网络"];
+                break;
+            default:
+                break;
+        }
+    }];
+    [mgr startMonitoring];
+}
+
 // 分页控件的监听方法
 - (void)pageChanged:(UIPageControl *)page
 {
@@ -158,32 +244,13 @@
     [self.scrollView setContentOffset:CGPointMake(x, 0) animated:YES];
 }
 
-
-
-
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
 }
 
-
-    
 -(void)setupSubViews{
-    
     [self.view addSubview:self.scrollView];
     [self.view addSubview:self.pageControl];
-    
-    NSString *cityName = @"";
-    NSString *realSubLocality = [self.placemark.subLocality substringWithRange:NSMakeRange(0, self.placemark.subLocality.length-1)];
-    NSString *realCity = [self.placemark.locality substringWithRange:NSMakeRange(0, self.placemark.locality.length-1)];
-    
-    for (ZSRArea *area in self.areas) {
-        cityName = [area.namecn isEqualToString:realSubLocality] ? realSubLocality : realCity;
-    }
-    ZSRPageView *firstView = [[ZSRPageView alloc] initWithCity:cityName];
-
-
-
-    [self.pageViews addObject:firstView];
     
     for (ZSRPageView *pageView in self.pageViews) {
         [self.scrollView addSubview:pageView];
@@ -213,6 +280,29 @@
     [self presentViewController:self.editController animated:YES completion:nil];
 }
 
+-(void)loadRecond{
+    NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithContentsOfFile:filePath];
+    NSArray *array = [dicts allValues];
+    for (int i = 0; i < dicts.count; i++) {
+        NSDictionary *dict = array[i];
+        ZSRPageView *pageView = [[ZSRPageView alloc] init];
+        pageView.mydata = [WeatherData mj_objectWithKeyValues:dict].data;
+        [pageView.tableView reloadData];
+        [self.myDatas addObject:pageView.mydata];
+        [self.scrollView addSubview:pageView];
+        [self.pageViews addObject:pageView];
+    }
+    
+    self.editController.dataSource = self.myDatas;
+    [self.scrollView.subviews enumerateObjectsUsingBlock:^(ZSRPageView *pageView, NSUInteger idx, BOOL *stop) {
+        
+        CGRect frame = pageView.frame;
+        frame.origin.x = idx * frame.size.width ;
+        pageView.frame = frame;
+    }];
+    self.scrollView.contentSize = CGSizeMake(self.pageViews.count * self.scrollView.bounds.size.width, 0);
+    self.pageControl.numberOfPages = self.pageViews.count;
+}
 
 #pragma mark - ZSREditControllerDelegate
 
@@ -259,25 +349,37 @@
 #pragma mark - 城市改变通知
 -(void)cityChange:(NSNotification*)note
 {
+    [MBProgressHUD showMessage:@"正在添加..." toView:self.editController.view];
     NSDictionary *userInfo = note.userInfo;
     NSString *cityName = [userInfo objectForKey:@"city"];
-    ZSRPageView *pageView = [[ZSRPageView alloc] initWithCity:cityName];
-    [pageView requestData:cityName completion:^{
-        
+    ZSRPageView *pageView = [[ZSRPageView alloc] init];
+    pageView.city = cityName;
+    
+    [ZSRHttpTool requestDataWithCity:cityName success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable data) {
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+        [self.localDicts setObject:dict forKey:cityName];
+        // MJExtension框架里,字典转模型的方法
+        pageView.mydata = [WeatherData mj_objectWithKeyValues:dict].data;
+        [pageView.tableView reloadData];
         [self.myDatas addObject:pageView.mydata];
         self.editController.dataSource = self.myDatas;
+        
         [self.editController refreshDataSource];
-
+        [MBProgressHUD hideHUDForView:self.editController.view];
+        [MBProgressHUD showSuccess:@"添加成功"];
     }];
+    
     CGRect frame = pageView.frame;
     frame.origin.x = self.pageViews.count * frame.size.width;
     pageView.frame = frame;
-    
     [self.pageViews addObject:pageView];
     self.pageControl.numberOfPages  = self.pageViews.count;
     _scrollView.contentSize = CGSizeMake(self.pageViews.count * _scrollView.bounds.size.width, 0);
     [self.scrollView addSubview:pageView];
 }
 
+-(void)willResignActiveNotification{
 
+    [self.localDicts writeToFile:filePath atomically:YES];
+}
 @end

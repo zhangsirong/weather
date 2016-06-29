@@ -47,6 +47,7 @@
     cityLabel.textColor = [UIColor whiteColor];
     cityLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
     cityLabel.textAlignment = NSTextAlignmentCenter;
+    cityLabel.text = @"加载数据中。。。";
     self.cityLabel = cityLabel;
     [self addSubview:cityLabel];
     
