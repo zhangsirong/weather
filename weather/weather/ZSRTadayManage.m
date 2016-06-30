@@ -19,7 +19,9 @@
     model.wendu = myData.wendu;
     model.city = myData.city;
     model.ganmao = myData.ganmao;
-    model.aqi = [NSString stringWithFormat:@"aqi:%@",myData.aqi];
+    if (model.aqi != nil) {
+        model.aqi = [NSString stringWithFormat:@"aqi:%@",myData.aqi];
+    }
     model.conditions = cast.type;
     return model;
 }

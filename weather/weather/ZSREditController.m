@@ -9,20 +9,41 @@
 #import "ZSREditController.h"
 #import "MyData.h"
 #import "ZSRAddCityController.h"
-@interface ZSREditController()<UITableViewDataSource,UITabBarDelegate>
+@interface ZSREditController()<UITableViewDelegate,UITableViewDataSource, UITabBarDelegate>
+@property (nonatomic, strong) UIImageView *backgroundImageView;
 
 @end
 
 @implementation ZSREditController
+-(NSMutableArray *)dataSource{
+    if (_dataSource ==nil) {
+        _dataSource = [NSMutableArray arrayWithCapacity:4];
+    }
+    return _dataSource;
+}
+
 -(void)viewDidLoad{
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor redColor];
+    self.view.backgroundColor = [UIColor clearColor];
+    UIImage *background = [UIImage imageNamed:@"bg1.jpg"];
+    UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:background];
+    backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.backgroundImageView = backgroundImageView;
+    [self.view insertSubview:self.backgroundImageView atIndex:0];
     
-    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(20, 20, self.view.bounds.size.width-40,40)];
-    btn.backgroundColor = [UIColor greenColor];
+    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(20, 20, 100,40)];
     [btn setTitle:@"添加城市" forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(addCity) forControlEvents:UIControlEventTouchUpInside];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 64)];
+    label.text = @"添加／删除城市";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.backgroundColor = [UIColor colorWithRed:230 green:230 blue:230 alpha:0.4];
+    
+    self.tableView.tableHeaderView = label;
     self.tableView.tableFooterView = btn;
+    self.tableView.tableFooterView.backgroundColor = [UIColor greenColor];
+    self.tableView.backgroundColor = [UIColor clearColor];
     
 }
 
@@ -30,9 +51,13 @@
     [self.tableView reloadData];
 }
 
+-(void)viewWillLayoutSubviews{
+    CGRect bounds = self.view.bounds;
+    self.backgroundImageView.frame = bounds;
+}
+
 -(void)addCity{
     ZSRAddCityController *Vc = [[ZSRAddCityController alloc] init];
-    
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:Vc];
     [self presentViewController:nav animated:YES completion:nil];
     
@@ -47,12 +72,14 @@
     static NSString *ID = @"editCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:ID];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ID];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     MyData *myData = self.dataSource[indexPath.row];
-    
+    cell.backgroundColor = [UIColor clearColor];
     cell.textLabel.text = myData.city;
-    cell.detailTextLabel.text = myData.wendu;
+    cell.detailTextLabel.text = [myData.wendu stringByAppendingString:@"°"];
+    cell.detailTextLabel.textColor = [UIColor blackColor];
     return cell;
 }
 

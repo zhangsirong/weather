@@ -16,10 +16,9 @@
 
 @end
 
-
 @interface ZSREditController : UITableViewController
-
 @property (nonatomic,strong) NSMutableArray *dataSource;
+
 @property (nonatomic, weak) id<ZSREditControllerDelegate> delegate;
 -(void)refreshDataSource;
 

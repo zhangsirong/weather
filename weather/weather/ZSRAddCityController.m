@@ -17,32 +17,47 @@
 
 @property BOOL searchControllerWasActive;
 @property BOOL searchControllerSearchFieldWasFirstResponder;
+@property (nonatomic, strong) UIImageView *backgroundImageView;
+@property (nonatomic, copy) NSArray *areas;
 
 @end
 
 
 @implementation ZSRAddCityController
+
+
 -(void)viewDidLoad{
     [super viewDidLoad];
+    [self setupSubViews];
+    self.areas = [ZSRArea areaList];
+}
+
+-(void)setupSubViews{
+    
+    self.view.backgroundColor = [UIColor clearColor];
+    UIImage *background = [UIImage imageNamed:@"bg1.jpg"];
+    UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:background];
+    backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.backgroundImageView = backgroundImageView;
+    [self.view insertSubview:self.backgroundImageView atIndex:0];
     
     _resultsController = [[ZSRResultsController alloc] init];
     _searchController = [[UISearchController alloc] initWithSearchResultsController:self.resultsController];
+    
     self.searchController.searchResultsUpdater = self;
     [self.searchController.searchBar sizeToFit];
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.resultsController.tableView.delegate = self;
+    self.resultsController.tableView.backgroundColor = [UIColor clearColor];
     self.searchController.delegate = self;
     self.searchController.dimsBackgroundDuringPresentation = NO; // default is YES
     self.searchController.searchBar.delegate = self; // so we can monitor text changes + others
     self.searchController.searchBar.placeholder = @"输入城市中文或拼音";
     [self.searchController.searchBar becomeFirstResponder];
     self.definesPresentationContext = YES;
-    
-    self.view.backgroundColor = [UIColor blueColor];
     self.title = @"添加城市";
-    self.areas = [ZSRArea areaList];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -59,6 +74,12 @@
         }
     }
 }
+
+-(void)viewWillLayoutSubviews{
+    CGRect bounds = self.view.bounds;
+    self.backgroundImageView.frame = bounds;
+}
+
 #pragma mark - UISearchBarDelegate
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
@@ -89,8 +110,6 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"CityChange" object:nil userInfo:dict];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
-
-
 #pragma mark - UISearchResultsUpdating
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
@@ -138,7 +157,9 @@
     searchResults = [[searchResults filteredArrayUsingPredicate:finalCompoundPredicate] mutableCopy];
     
     ZSRResultsController *tableController = (ZSRResultsController *)self.searchController.searchResultsController;
+    
     tableController.filteredAreas = searchResults;
     [tableController.tableView reloadData];
 }
+
 @end

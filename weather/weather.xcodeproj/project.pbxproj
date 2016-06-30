@@ -20,6 +20,7 @@
 		E619B9251D2045C300C2911E /* ZSREditController.m in Sources */ = {isa = PBXBuildFile; fileRef = E619B9241D2045C300C2911E /* ZSREditController.m */; };
 		E61A91D61D21501B00248E2B /* ZSRPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = E61A91D51D21501B00248E2B /* ZSRPageView.m */; };
 		E61A91DC1D21977B00248E2B /* ZSRAddCityController.m in Sources */ = {isa = PBXBuildFile; fileRef = E61A91DB1D21977B00248E2B /* ZSRAddCityController.m */; };
+		E64C67041D24E6F20056C9A9 /* ZSRTadayViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E64C67031D24E6F20056C9A9 /* ZSRTadayViewCell.m */; };
 		E65CBCDE1D1D2C7C00B54F00 /* cloudy1.png in Resources */ = {isa = PBXBuildFile; fileRef = E65CBCB71D1D2C7B00B54F00 /* cloudy1.png */; };
 		E65CBCDF1D1D2C7C00B54F00 /* cloudy1_night.png in Resources */ = {isa = PBXBuildFile; fileRef = E65CBCB81D1D2C7B00B54F00 /* cloudy1_night.png */; };
 		E65CBCE01D1D2C7C00B54F00 /* cloudy2.png in Resources */ = {isa = PBXBuildFile; fileRef = E65CBCB91D1D2C7B00B54F00 /* cloudy2.png */; };
@@ -62,7 +63,6 @@
 		E6AA13171D1D742700D28EAD /* ZSRWeatherCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6AA13161D1D742700D28EAD /* ZSRWeatherCell.m */; };
 		E6BCFF871D1E34BF001320E7 /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = E6BCFF851D1E34BF001320E7 /* bg.png */; };
 		E6BCFF881D1E34BF001320E7 /* bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6BCFF861D1E34BF001320E7 /* bg@2x.png */; };
-		E6BCFF8B1D1E57A9001320E7 /* ZSRTadayView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BCFF8A1D1E57A9001320E7 /* ZSRTadayView.m */; };
 		E6BCFF8E1D1E6FD5001320E7 /* ZSRTadayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BCFF8D1D1E6FD5001320E7 /* ZSRTadayModel.m */; };
 		E6CF56021D1C1C4E001C75BC /* Foundation+Log.m in Sources */ = {isa = PBXBuildFile; fileRef = E6CF56011D1C1C4E001C75BC /* Foundation+Log.m */; };
 		E6DEB4A21D239725007EDF5B /* MBProgressHUD+ZSR.m in Sources */ = {isa = PBXBuildFile; fileRef = E6DEB4A11D239725007EDF5B /* MBProgressHUD+ZSR.m */; };
@@ -119,6 +119,9 @@
 		E61A91D51D21501B00248E2B /* ZSRPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSRPageView.m; sourceTree = "<group>"; };
 		E61A91DA1D21977B00248E2B /* ZSRAddCityController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSRAddCityController.h; sourceTree = "<group>"; };
 		E61A91DB1D21977B00248E2B /* ZSRAddCityController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSRAddCityController.m; sourceTree = "<group>"; };
+		E64C67021D24E6F20056C9A9 /* ZSRTadayViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSRTadayViewCell.h; sourceTree = "<group>"; };
+		E64C67031D24E6F20056C9A9 /* ZSRTadayViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSRTadayViewCell.m; sourceTree = "<group>"; };
+		E64C67051D251FEB0056C9A9 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		E65CBCB71D1D2C7B00B54F00 /* cloudy1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloudy1.png; sourceTree = "<group>"; };
 		E65CBCB81D1D2C7B00B54F00 /* cloudy1_night.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloudy1_night.png; sourceTree = "<group>"; };
 		E65CBCB91D1D2C7B00B54F00 /* cloudy2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloudy2.png; sourceTree = "<group>"; };
@@ -163,8 +166,6 @@
 		E6AA13161D1D742700D28EAD /* ZSRWeatherCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSRWeatherCell.m; sourceTree = "<group>"; };
 		E6BCFF851D1E34BF001320E7 /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg.png; sourceTree = "<group>"; };
 		E6BCFF861D1E34BF001320E7 /* bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg@2x.png"; sourceTree = "<group>"; };
-		E6BCFF891D1E57A9001320E7 /* ZSRTadayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSRTadayView.h; sourceTree = "<group>"; };
-		E6BCFF8A1D1E57A9001320E7 /* ZSRTadayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSRTadayView.m; sourceTree = "<group>"; };
 		E6BCFF8C1D1E6FD5001320E7 /* ZSRTadayModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSRTadayModel.h; sourceTree = "<group>"; };
 		E6BCFF8D1D1E6FD5001320E7 /* ZSRTadayModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSRTadayModel.m; sourceTree = "<group>"; };
 		E6CF56011D1C1C4E001C75BC /* Foundation+Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Foundation+Log.m"; sourceTree = "<group>"; };
@@ -269,6 +270,7 @@
 		E607A9911D1BE27E005713DC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E64C67051D251FEB0056C9A9 /* PrefixHeader.pch */,
 				E607A9921D1BE27E005713DC /* main.m */,
 			);
 			name = "Supporting Files";
@@ -372,8 +374,8 @@
 			children = (
 				E6AA13151D1D742700D28EAD /* ZSRWeatherCell.h */,
 				E6AA13161D1D742700D28EAD /* ZSRWeatherCell.m */,
-				E6BCFF891D1E57A9001320E7 /* ZSRTadayView.h */,
-				E6BCFF8A1D1E57A9001320E7 /* ZSRTadayView.m */,
+				E64C67021D24E6F20056C9A9 /* ZSRTadayViewCell.h */,
+				E64C67031D24E6F20056C9A9 /* ZSRTadayViewCell.m */,
 				E61A91D41D21501B00248E2B /* ZSRPageView.h */,
 				E61A91D51D21501B00248E2B /* ZSRPageView.m */,
 			);
@@ -641,7 +643,7 @@
 				E61A91DC1D21977B00248E2B /* ZSRAddCityController.m in Sources */,
 				E607A9961D1BE27E005713DC /* AppDelegate.m in Sources */,
 				E619B9171D201E8B00C2911E /* ZSRTadayManage.m in Sources */,
-				E6BCFF8B1D1E57A9001320E7 /* ZSRTadayView.m in Sources */,
+				E64C67041D24E6F20056C9A9 /* ZSRTadayViewCell.m in Sources */,
 				E607A9931D1BE27E005713DC /* main.m in Sources */,
 				E619B9251D2045C300C2911E /* ZSREditController.m in Sources */,
 				E6CF56021D1C1C4E001C75BC /* Foundation+Log.m in Sources */,
@@ -787,6 +789,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "${SRCROOT}/weather/PrefixHeader.pch";
 				INFOPLIST_FILE = weather/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhang.weather;
@@ -800,6 +804,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "${SRCROOT}/weather/PrefixHeader.pch";
 				INFOPLIST_FILE = weather/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhang.weather;
