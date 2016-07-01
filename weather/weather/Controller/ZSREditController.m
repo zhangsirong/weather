@@ -11,7 +11,7 @@
 #import "ZSRAddCityController.h"
 @interface ZSREditController()<UITableViewDelegate,UITableViewDataSource, UITabBarDelegate>
 @property (nonatomic, strong) UIImageView *backgroundImageView;
-
+@property (strong, nonatomic) UIView *footerView;
 @end
 
 @implementation ZSREditController
@@ -22,6 +22,29 @@
     return _dataSource;
 }
 
+- (UIView *)footerView
+{
+    if (_footerView == nil) {
+        _footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenW, 80)];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = CGRectMake(20, 20, _footerView.frame.size.width - 40, 45);
+        [button.layer setMasksToBounds:YES];
+        [button.layer setCornerRadius:10.0]; //设置矩形四个圆角半径
+        [button.layer setBorderWidth:1.0];   //边框宽度
+        [button setTitle:@"添加城市" forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [button setBackgroundColor:[UIColor greenColor]];
+        [button addTarget:self action:@selector(addCity) forControlEvents:UIControlEventTouchUpInside];
+        
+        [_footerView addSubview:button];
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(20, 0, _footerView.frame.size.width - 10, 0.5)];
+        line.backgroundColor = [UIColor lightGrayColor];
+        [_footerView addSubview:line];
+    }
+    
+    return _footerView;
+}
+
 -(void)viewDidLoad{
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
@@ -30,19 +53,14 @@
     backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.backgroundImageView = backgroundImageView;
     [self.view insertSubview:self.backgroundImageView atIndex:0];
-    
-    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(20, 20, 100,40)];
-    [btn setTitle:@"添加城市" forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(addCity) forControlEvents:UIControlEventTouchUpInside];
-    
+
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 64)];
     label.text = @"添加／删除城市";
     label.textAlignment = NSTextAlignmentCenter;
     label.backgroundColor = [UIColor colorWithRed:230 green:230 blue:230 alpha:0.4];
-    
+
     self.tableView.tableHeaderView = label;
-    self.tableView.tableFooterView = btn;
-    self.tableView.tableFooterView.backgroundColor = [UIColor greenColor];
+    self.tableView.tableFooterView = self.footerView;
     self.tableView.backgroundColor = [UIColor clearColor];
     
     
@@ -59,6 +77,7 @@
 }
 
 -(void)addCity{
+    NSLog(@"click");
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:1];
 
     for (MyData *data in self.dataSource) {
