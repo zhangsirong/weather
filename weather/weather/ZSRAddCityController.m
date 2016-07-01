@@ -9,7 +9,8 @@
 #import "ZSRAddCityController.h"
 #import "ZSRResultsController.h"
 #import "ZSRArea.h"
-@interface ZSRAddCityController () <UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating>
+#import "ZSRCityView.h"
+@interface ZSRAddCityController () <UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating,ZSRCityViewDelegate>
 
 @property (nonatomic, strong) UISearchController *searchController;
 
@@ -19,12 +20,20 @@
 @property BOOL searchControllerSearchFieldWasFirstResponder;
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, copy) NSArray *areas;
+@property (nonatomic, strong) ZSRCityView *cityView;
+
 
 @end
 
 
 @implementation ZSRAddCityController
-
+-(ZSRCityView *)cityView{
+    if (_cityView == nil) {
+        _cityView = [[ZSRCityView alloc] initWithFrame:CGRectMake(20, 50, ScreenW-40, ScreenH)];
+        _cityView.delegate = self;
+    }
+    return _cityView;
+}
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -51,12 +60,15 @@
     
     self.resultsController.tableView.delegate = self;
     self.resultsController.tableView.backgroundColor = [UIColor clearColor];
+    self.resultsController.tableView.tableFooterView = [[UIView alloc] init];
     self.searchController.delegate = self;
     self.searchController.dimsBackgroundDuringPresentation = NO; // default is YES
     self.searchController.searchBar.delegate = self; // so we can monitor text changes + others
     self.searchController.searchBar.placeholder = @"输入城市中文或拼音";
     [self.searchController.searchBar becomeFirstResponder];
     self.definesPresentationContext = YES;
+    
+    [self.view addSubview:self.cityView];
     self.title = @"添加城市";
 }
 
@@ -118,9 +130,10 @@
     NSMutableArray *searchResults = [self.areas mutableCopy];
     
     NSString *strippedString = [searchText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    
+    self.cityView.hidden = NO;
     NSArray *searchItems = nil;
     if (strippedString.length > 0) {
+        self.cityView.hidden = YES;
         searchItems = [strippedString componentsSeparatedByString:@" "];
     }
     NSMutableArray *andMatchPredicates = [NSMutableArray array];
@@ -162,4 +175,12 @@
     [tableController.tableView reloadData];
 }
 
+-(void)cityView:(ZSRCityView *)cityView didClickButton:(UIButton *)button{
+    
+    if ([button.titleLabel.text isEqualToString:@"定位"]) {
+        NSLog(@"定位");
+    }else{
+        self.searchController.searchBar.text = button.titleLabel.text;
+    }
+}
 @end

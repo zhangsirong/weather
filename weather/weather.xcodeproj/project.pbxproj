@@ -73,6 +73,7 @@
 		E6E360F01D1C47EE005C66D7 /* MyData.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E360EF1D1C47EE005C66D7 /* MyData.m */; };
 		E6E360F31D1C4D5F005C66D7 /* ForecastPart.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E360F21D1C4D5F005C66D7 /* ForecastPart.m */; };
 		E6E911B21D1CE50100310FD9 /* Yesterday.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E911B11D1CE50100310FD9 /* Yesterday.m */; };
+		E6F8CA7E1D26130900478B87 /* ZSRCityView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6F8CA7D1D26130900478B87 /* ZSRCityView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -185,6 +186,8 @@
 		E6E360F21D1C4D5F005C66D7 /* ForecastPart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastPart.m; sourceTree = "<group>"; };
 		E6E911B01D1CE50100310FD9 /* Yesterday.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Yesterday.h; sourceTree = "<group>"; };
 		E6E911B11D1CE50100310FD9 /* Yesterday.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Yesterday.m; sourceTree = "<group>"; };
+		E6F8CA7C1D26130900478B87 /* ZSRCityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSRCityView.h; sourceTree = "<group>"; };
+		E6F8CA7D1D26130900478B87 /* ZSRCityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSRCityView.m; sourceTree = "<group>"; };
 		F111F8382A797663AE4E72DD /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -378,6 +381,8 @@
 				E64C67031D24E6F20056C9A9 /* ZSRTadayViewCell.m */,
 				E61A91D41D21501B00248E2B /* ZSRPageView.h */,
 				E61A91D51D21501B00248E2B /* ZSRPageView.m */,
+				E6F8CA7C1D26130900478B87 /* ZSRCityView.h */,
+				E6F8CA7D1D26130900478B87 /* ZSRCityView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -653,6 +658,7 @@
 				E6E360F01D1C47EE005C66D7 /* MyData.m in Sources */,
 				E6E360F31D1C4D5F005C66D7 /* ForecastPart.m in Sources */,
 				E61A91D61D21501B00248E2B /* ZSRPageView.m in Sources */,
+				E6F8CA7E1D26130900478B87 /* ZSRCityView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

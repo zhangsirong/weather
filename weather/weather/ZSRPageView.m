@@ -20,8 +20,6 @@
 
 @interface ZSRPageView()<UITableViewDataSource,UITableViewDelegate>
 
-
-//@property (nonatomic, strong) ZSRTadayView *headerView;
 @property (nonatomic, strong) NSArray *forecasts;
 @property (nonatomic, strong) ZSRTadayModel *tadayModels;
 

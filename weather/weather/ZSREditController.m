@@ -45,9 +45,11 @@
     self.tableView.tableFooterView.backgroundColor = [UIColor greenColor];
     self.tableView.backgroundColor = [UIColor clearColor];
     
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     [self.tableView reloadData];
 }
 

@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "Foundation+Log.h"
 #import "ZSRMainViewController.h"
+#import "ZSRAddCityController.h"
 @interface AppDelegate ()
 
 @end
@@ -18,7 +19,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window  = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.rootViewController = [[ZSRMainViewController alloc] init];
+    ZSRAddCityController *Vc = [[ZSRAddCityController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:Vc];
+    self.window.rootViewController = nav;
+    
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;
