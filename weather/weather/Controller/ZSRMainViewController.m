@@ -161,8 +161,16 @@
             NSLog(@"INTULocationStatusServicesNotDetermined");
 
         }else if (status == INTULocationStatusServicesDenied){
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"打开定位权限" message:@"请在设置中打开定位权限,本程序将退出" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                exit(0);
+            }];
+            [alertController addAction:action];
+            [self presentViewController:alertController animated:YES completion:nil];
             NSLog(@"INTULocationStatusServicesDenied");
+
         }else if (status == INTULocationStatusServicesRestricted){
+            
             NSLog(@"INTULocationStatusServicesRestricted");
 
         }else if (status == INTULocationStatusServicesDisabled){

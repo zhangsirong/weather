@@ -101,10 +101,6 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 0;
@@ -180,6 +176,7 @@
     if ([button.titleLabel.text isEqualToString:@"定位"]) {
         NSLog(@"定位");
     }else{
+        [self.searchController.searchBar becomeFirstResponder];
         self.searchController.searchBar.text = button.titleLabel.text;
     }
 }

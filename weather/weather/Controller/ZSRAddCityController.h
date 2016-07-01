@@ -8,5 +8,5 @@
 
 #import <UIKit/UIKit.h>
 @interface ZSRAddCityController : UITableViewController
-
+@property(nonatomic ,copy) NSArray *exitCity;
 @end

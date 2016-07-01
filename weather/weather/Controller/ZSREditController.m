@@ -59,7 +59,14 @@
 }
 
 -(void)addCity{
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:1];
+
+    for (MyData *data in self.dataSource) {
+        [array addObject:data.city];
+    }
+    
     ZSRAddCityController *Vc = [[ZSRAddCityController alloc] init];
+    Vc.exitCity = array;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:Vc];
     [self presentViewController:nav animated:YES completion:nil];
     
@@ -108,7 +115,6 @@
     
 }
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"%ld",indexPath.row);
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         if ([self.delegate respondsToSelector:@selector(editControllerView:deleteRowAtIndexPath:)]) {
             [self.delegate editControllerView:self deleteRowAtIndexPath:indexPath];
@@ -119,6 +125,9 @@
 }
 
 -(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row == 0) {
+        return UITableViewCellEditingStyleNone;
+    }
     
     return UITableViewCellEditingStyleDelete;
 }

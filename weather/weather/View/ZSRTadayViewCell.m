@@ -38,11 +38,9 @@
         cell = [[self alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
-        
     }
     return cell;
 }
-
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -100,7 +98,7 @@
         aqiLabel.backgroundColor = [UIColor clearColor];
         aqiLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
         aqiLabel.textColor = [UIColor whiteColor];
-        aqiLabel.textAlignment = NSTextAlignmentRight;
+        aqiLabel.textAlignment = NSTextAlignmentLeft;
         self.aqiLabel = aqiLabel;
         [self addSubview:aqiLabel];
         
@@ -143,7 +141,7 @@
         [aqiLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(ganmaoLabel.mas_top).offset(-20);
             make.left.equalTo(self.mas_left).offset(20);
-            make.width.mas_equalTo(80);
+            make.width.mas_equalTo(300);
             make.height.mas_equalTo(20);
         }];
     }
@@ -155,13 +153,27 @@
     self.cityLabel.text = model.city;
     self.conditionsLabel.text = model.conditions;
     self.temperLabel.text = [model.wendu stringByAppendingString:@"°"];
-    self.aqiLabel.text = model.aqi;
+    if (model.aqi != nil) {
+        self.aqiLabel.text = [NSString stringWithFormat:@"空气质量指数:%@",model.aqi];
+    }
     self.ganmaoLabel.text = model.ganmao;
     
     if ([model.conditions isEqualToString:@"晴"]) {
-        self.iconView.image = [UIImage imageNamed:@"cloudy1"];
-    }else if ([model.conditions isEqualToString:@"雷阵雨"]){
+        self.iconView.image = [UIImage imageNamed:@"sunny"];
+    }else if ([model.conditions isEqualToString:@"小雨"]){
         self.iconView.image = [UIImage imageNamed:@"light_rain"];
+    }else if ([model.conditions containsString:@"阵雨"]){
+        self.iconView.image = [UIImage imageNamed:@"shower1"];
+    }else if ([model.conditions isEqualToString:@"暴雨"]){
+        self.iconView.image = [UIImage imageNamed:@"shower3"];
+    }else if ([model.conditions isEqualToString:@"大雨"]){
+        self.iconView.image = [UIImage imageNamed:@"shower3"];
+    }else if ([model.conditions containsString:@"中雨"]){
+        self.iconView.image = [UIImage imageNamed:@"shower2"];
+    }else if ([model.conditions containsString:@"多云"]){
+        self.iconView.image = [UIImage imageNamed:@"cloudy3"];
+    }else if ([model.conditions containsString:@"阴"]){
+        self.iconView.image = [UIImage imageNamed:@"overcast"];
     }
 }
 @end

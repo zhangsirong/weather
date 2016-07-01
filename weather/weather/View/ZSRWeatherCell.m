@@ -164,9 +164,25 @@
     self.conditionsLabel.text = forecastModel.type;
     self.fengXLabel.text = forecastModel.fengxiang;
     self.fengLLabel.text = forecastModel.fengli;
-    
-    
     self.wenduLabel.text = [NSString stringWithFormat:@"%@°/%@°",[forecastModel.high substringWithRange:NSMakeRange(3, 2)],[forecastModel.low substringWithRange:NSMakeRange(3, 2) ]];
+   
+    if ([forecastModel.type isEqualToString:@"晴"]) {
+        self.iconView.image = [UIImage imageNamed:@"sunny"];
+    }else if ([forecastModel.type isEqualToString:@"小雨"]){
+        self.iconView.image = [UIImage imageNamed:@"light_rain"];
+    }else if ([forecastModel.type containsString:@"阵雨"]){
+        self.iconView.image = [UIImage imageNamed:@"shower1"];
+    }else if ([forecastModel.type isEqualToString:@"暴雨"]){
+        self.iconView.image = [UIImage imageNamed:@"shower3"];
+    }else if ([forecastModel.type isEqualToString:@"大雨"]){
+        self.iconView.image = [UIImage imageNamed:@"shower3"];
+    }else if ([forecastModel.type containsString:@"中雨"]){
+        self.iconView.image = [UIImage imageNamed:@"shower2"];
+    }else if ([forecastModel.type containsString:@"多云"]){
+        self.iconView.image = [UIImage imageNamed:@"cloudy3"];
+    }else if ([forecastModel.type containsString:@"阴"]){
+        self.iconView.image = [UIImage imageNamed:@"overcast"];
+    }
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

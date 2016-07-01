@@ -19,10 +19,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window  = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    ZSRAddCityController *Vc = [[ZSRAddCityController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:Vc];
-    self.window.rootViewController = nav;
-    
+    ZSRMainViewController *mainController = [[ZSRMainViewController alloc] init];
+    self.window.rootViewController = mainController;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;
