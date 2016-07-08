@@ -11,6 +11,7 @@
 #import "ZSRArea.h"
 #import "ZSRCityView.h"
 #import "ZSRMainViewController.h"
+#import "INTULocationManager.h"
 @interface ZSRAddCityController () <UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating,ZSRCityViewDelegate>
 
 @property (nonatomic, strong) UISearchController *searchController;
@@ -217,11 +218,66 @@
     
     
     if ([button.titleLabel.text isEqualToString:@"定位"]) {
-        NSLog(@"定位");
-        button.selected = YES;
+        [self searchLocation];
     }else{
         [self.searchController.searchBar becomeFirstResponder];
         self.searchController.searchBar.text = button.titleLabel.text;
     }
 }
+
+
+#pragma mark - 定位
+
+
+- (void)searchLocation {
+    INTULocationManager *locMgr = [INTULocationManager sharedInstance];
+    
+    [locMgr requestLocationWithDesiredAccuracy:INTULocationAccuracyCity timeout:10.0 delayUntilAuthorized:YES block:^(CLLocation *currentLocation, INTULocationAccuracy achievedAccuracy, INTULocationStatus status) {
+        //定位成功 到网络获取数据
+        if (status == INTULocationStatusSuccess) {
+            [[[CLGeocoder alloc] init] reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+                if(!error){
+                    for (CLPlacemark *placemark in placemarks) {
+                        NSLog(@"%@ %@ %f %f", placemark.subLocality, placemark.addressDictionary, placemark.location.coordinate.latitude, placemark.location.coordinate.longitude);
+                       [self locationSuccess:placemark];
+                    }
+                }else{
+                    [self showAlertController:@"定位失败，请手动选择城市"];
+                }
+            }];
+        }else if (status == INTULocationStatusServicesDenied){
+            [self showAlertController:@"打开定位权限才可以定位哦"];
+            
+        }else{
+            [self showAlertController:@"请检查定位权限或者手动选择城市"];
+        }
+    }];
+}
+
+- (void)showAlertController:(NSString *)message{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"定位失败" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:action];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)locationSuccess:(CLPlacemark *)placemark {
+    [MBProgressHUD showSuccess:@"定位成功"];
+    NSString *cityName = @"";
+    NSString *realSubLocality = [placemark.subLocality substringWithRange:NSMakeRange(0, placemark.subLocality.length-1)];
+    NSString *realCity = [placemark.locality substringWithRange:NSMakeRange(0, placemark.locality.length-1)];
+    
+    for (ZSRArea *area in self.areas) {
+        cityName = [area.namecn isEqualToString:realSubLocality] ? realSubLocality : realCity;
+    }
+    if(cityName == NULL){
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"不支持该定位城市" message:@"请选择中国大陆内的城市，谢谢" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:action];
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    [self.searchController.searchBar becomeFirstResponder];
+    self.searchController.searchBar.text = cityName;
+}
+
 @end

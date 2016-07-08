@@ -179,78 +179,6 @@ static id _instance;
 -(void)dealloc{
     [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
 }
-#pragma mark - 定位
-- (void)searchLocation {
-    INTULocationManager *locMgr = [INTULocationManager sharedInstance];
-    [locMgr requestLocationWithDesiredAccuracy:INTULocationAccuracyCity timeout:10.0 delayUntilAuthorized:YES block:^(CLLocation *currentLocation, INTULocationAccuracy achievedAccuracy, INTULocationStatus status) {
-        //定位成功 到网络获取数据
-        if (status == INTULocationStatusSuccess) {
-            [MBProgressHUD hideHUDForView:[self.pageViews firstObject]];
-            [MBProgressHUD showSuccess:@"定位成功"];
-            [[[CLGeocoder alloc] init] reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
-                for (CLPlacemark *placemark in placemarks) {
-                    NSLog(@"%@ %@ %f %f", placemark.subLocality, placemark.addressDictionary, placemark.location.coordinate.latitude, placemark.location.coordinate.longitude);
-                    [self locationSuccess:placemark];
-                    
-                }
-            }];
-        }
-        else if(status == INTULocationStatusTimedOut){
-            NSLog(@"INTULocationStatusTimedOut");
-        }
-        else if (status == INTULocationStatusServicesNotDetermined){
-            NSLog(@"INTULocationStatusServicesNotDetermined");
-
-        }else if (status == INTULocationStatusServicesDenied){
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"打开定位权限" message:@"请在设置中打开定位权限,本程序将退出" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *action = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                exit(0);
-            }];
-            [alertController addAction:action];
-            [self presentViewController:alertController animated:YES completion:nil];
-            NSLog(@"INTULocationStatusServicesDenied");
-
-        }else if (status == INTULocationStatusServicesRestricted){
-            
-            NSLog(@"INTULocationStatusServicesRestricted");
-
-        }else if (status == INTULocationStatusServicesDisabled){
-            NSLog(@"INTULocationStatusServicesDisabled");
-
-            
-        }else{
-            
-        }
-        
-    }];
-}
-
-- (void)locationSuccess:(CLPlacemark *)placemark {
-    
-    NSString *cityName = @"";
-    NSString *realSubLocality = [placemark.subLocality substringWithRange:NSMakeRange(0, placemark.subLocality.length-1)];
-    NSString *realCity = [placemark.locality substringWithRange:NSMakeRange(0, placemark.locality.length-1)];
-    
-    for (ZSRArea *area in self.areas) {
-        cityName = [area.namecn isEqualToString:realSubLocality] ? realSubLocality : realCity;
-    }
-    ((ZSRPageView *)[self.pageViews firstObject]).city = cityName;
-    [MBProgressHUD showMessage:@"加载数据"];
-
-    [ZSRHttpTool requestDataWithCity:cityName success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable data) {
-        [MBProgressHUD hideHUD];
-
-        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-        [self.localDicts setObject:dict forKey:@"0"];
-        // MJExtension框架里,字典转模型的方法
-        ((ZSRPageView *)[self.pageViews firstObject]).mydata = [WeatherData mj_objectWithKeyValues:dict].data;
-        [((ZSRPageView *)[self.pageViews firstObject]).tableView reloadData];
-        [self reflashPageViews];
-        
-    }failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull data) {
-        NSLog(@"log");
-    }];
-}
 
 //网络改变
 -(void)networkChange{
@@ -366,9 +294,11 @@ static id _instance;
     [self.citys removeObjectAtIndex:indexPath.row];
     [removeView removeFromSuperview];
     [self.pageViews removeObject:removeView];
+    [self.localDicts removeObjectForKey:[NSString stringWithFormat:@"%ld", indexPath.row]];
     
     NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithDictionary:self.localDicts];
     [self.localDicts removeAllObjects];
+    
     NSArray *myKeys = [dicts allKeys];
     NSArray *sortedKeys = [myKeys sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
     for (int i = 0; i < sortedKeys.count; i++) {
