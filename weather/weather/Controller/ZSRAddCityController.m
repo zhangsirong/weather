@@ -10,6 +10,7 @@
 #import "ZSRResultsController.h"
 #import "ZSRArea.h"
 #import "ZSRCityView.h"
+#import "ZSRMainViewController.h"
 @interface ZSRAddCityController () <UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating,ZSRCityViewDelegate>
 
 @property (nonatomic, strong) UISearchController *searchController;
@@ -21,12 +22,19 @@
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, copy) NSArray *areas;
 @property (nonatomic, strong) ZSRCityView *cityView;
-
+@property(nonatomic ,strong) NSMutableArray *exitCity;
 
 @end
 
 
 @implementation ZSRAddCityController
+
+-(NSMutableArray *)exitCity{
+    if (_exitCity == nil) {
+        _exitCity = [NSMutableArray arrayWithCapacity:1];
+    }
+    return _exitCity;
+}
 -(ZSRCityView *)cityView{
     if (_cityView == nil) {
         _cityView = [[ZSRCityView alloc] initWithFrame:CGRectMake(20, 50, ScreenW-40, ScreenH)];
@@ -39,6 +47,24 @@
     [super viewDidLoad];
     [self setupSubViews];
     self.areas = [ZSRArea areaList];
+}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.exitCity = [ZSRMainViewController sharedMainViewController].citys;
+    self.resultsController.exitCity = self.exitCity;
+    for (UIButton *btn in self.cityView.cityButtons) {
+        for (NSString *cityName in self.exitCity) {
+            if ([cityName isEqualToString:btn.titleLabel.text]) {
+                btn.selected = YES;
+                btn.userInteractionEnabled=NO;
+                break;
+            }else{
+                btn.selected = NO;
+                btn.userInteractionEnabled=YES;
+            }
+        }
+    }
+    self.searchController.searchBar.text = @"";
 }
 
 -(void)setupSubViews{
@@ -96,9 +122,15 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
+    
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    searchBar.text = @"";
+    ZSRMainViewController *mainController = [ZSRMainViewController sharedMainViewController];
+    if (mainController.citys.count >0) {
+        [self.navigationController pushViewController:mainController animated:YES];
+
+    }
 }
 
 
@@ -107,16 +139,26 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
-    return NULL;
+    
+    static NSString *ID = @"cellID";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ID];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.backgroundColor = [UIColor clearColor];
+    }
+    return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+//    BOOL isLogin = YES;
+//    [userDefault setBool:isLogin forKey:@"isLogin"];
     ZSRArea *area = self.resultsController.filteredAreas[indexPath.row];
-    NSDictionary *dict = @{@"city":area.namecn};
-    NSLog(@"%@",area);
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"CityChange" object:nil userInfo:dict];
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    ZSRMainViewController *mainController = [ZSRMainViewController sharedMainViewController];
+    [mainController.citys addObject:area.namecn];
+    [self.navigationController pushViewController:mainController animated:YES];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"addcity" object:nil];
+
 }
 #pragma mark - UISearchResultsUpdating
 
@@ -173,8 +215,10 @@
 
 -(void)cityView:(ZSRCityView *)cityView didClickButton:(UIButton *)button{
     
+    
     if ([button.titleLabel.text isEqualToString:@"定位"]) {
         NSLog(@"定位");
+        button.selected = YES;
     }else{
         [self.searchController.searchBar becomeFirstResponder];
         self.searchController.searchBar.text = button.titleLabel.text;

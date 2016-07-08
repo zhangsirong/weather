@@ -164,7 +164,7 @@
         self.iconView.image = [UIImage imageNamed:@"light_rain"];
     }else if ([model.conditions containsString:@"阵雨"]){
         self.iconView.image = [UIImage imageNamed:@"shower1"];
-    }else if ([model.conditions isEqualToString:@"暴雨"]){
+    }else if ([model.conditions containsString:@"暴雨"]){
         self.iconView.image = [UIImage imageNamed:@"shower3"];
     }else if ([model.conditions isEqualToString:@"大雨"]){
         self.iconView.image = [UIImage imageNamed:@"shower3"];

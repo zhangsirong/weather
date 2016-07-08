@@ -16,4 +16,6 @@
 @interface ZSRCityView : UIView
 @property (nonatomic, strong) NSString *cityName;
 @property (nonatomic,weak) id<ZSRCityViewDelegate> delegate;
+@property (nonatomic, strong) NSMutableArray *cityButtons;
+
 @end

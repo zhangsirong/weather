@@ -12,7 +12,7 @@
 #import "MJExtension.h"
 @implementation ZSRHttpTool
 
-+(void)requestDataWithCity:(NSString *)city success:(void (^)(NSURLSessionDataTask * _Nonnull, id _Nullable))success{
++(void)requestDataWithCity:(NSString *)city success:(void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable data))success failure:(void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure{
     NSString *URLString = @"http://wthrcdn.etouch.cn/weather_mini";
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
     dict[@"city"] = city;
@@ -22,11 +22,7 @@
 
     NSURLSessionDataTask * task = [httpManager GET:URLString parameters:dict progress:^(NSProgress * _Nonnull downloadProgress) {
 
-    } success:success failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"%@",error);
-    }];
-    
- 
+    } success:success failure:failure];
     [task resume];
 }
 @end

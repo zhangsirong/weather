@@ -39,6 +39,7 @@
 
 @implementation ZSRMainViewController
 
+static id _instance;
 
 -(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     
@@ -48,6 +49,28 @@
     return self;
 }
 
+
+
++ (id)allocWithZone:(struct _NSZone *)zone {
+    if (_instance == nil) { // 防止创建多次
+        _instance = [super allocWithZone:zone];
+    }
+    return _instance;
+}
+
++ (instancetype)sharedMainViewController {
+
+    if (_instance == nil) { // 防止创建多次
+        _instance = [[self alloc] init];
+    }
+    return _instance;
+}
+
++ (id)copyWithZone:(struct _NSZone *)zone {
+    return _instance;
+}
+
+
 #pragma mark - getter
 -(ZSREditController *)editController{
     if (_editController == nil) {
@@ -55,6 +78,13 @@
         _editController.delegate = self;
     }
     return _editController;
+}
+
+-(NSMutableArray *)citys{
+    if (_citys == nil) {
+        _citys = [NSMutableArray arrayWithCapacity:1];
+    }
+    return _citys;
 }
 
 -(NSMutableArray *)pageViews{
@@ -119,22 +149,33 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.areas = [ZSRArea areaList];
-    [self loadRecond];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"bg.png"] forBarMetrics:UIBarMetricsCompact];
+    self.navigationItem.hidesBackButton = YES;
     [self networkChange];
+
     [self setupSubViews];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange:) name:@"CityChange" object:nil];
+    BOOL login = [userDefault boolForKey:@"isLogin"];
+    
+    if (login) {
+        [self loadRecond];
+    }else{
+        [self loadData];
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willResignActiveAction) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willResignActiveAction) name:UIApplicationWillTerminateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadMoreData) name:@"loadMoreData" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addCity) name:@"addcity" object:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
 }
-
-- (void)viewWillAppear:(BOOL)animated{
-    
+-(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+
 }
+
 -(void)dealloc{
     [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
 }
@@ -206,6 +247,8 @@
         [((ZSRPageView *)[self.pageViews firstObject]).tableView reloadData];
         [self reflashPageViews];
         
+    }failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull data) {
+        NSLog(@"log");
     }];
 }
 
@@ -217,7 +260,7 @@
         switch (status) {
             case AFNetworkReachabilityStatusReachableViaWiFi:
             case AFNetworkReachabilityStatusReachableViaWWAN:
-                [self searchLocation];
+//                [self searchLocation];
                 break;
                 
             case AFNetworkReachabilityStatusNotReachable:
@@ -262,9 +305,7 @@
     
     [self.view addSubview:self.scrollView];
     [self.view addSubview:self.pageControl];
-    for (ZSRPageView *pageView in self.pageViews) {
-        [self.scrollView addSubview:pageView];
-    }
+
     UIButton *editButton = [[UIButton alloc] initWithFrame:CGRectMake(ScreenW-44, ScreenH-44, 44, 44)];
     [editButton setTitle:@"编辑" forState:UIControlStateNormal];
     [editButton addTarget:self action:@selector(buttonClick) forControlEvents:UIControlEventTouchUpInside];
@@ -279,7 +320,7 @@
 
 -(void)buttonClick{
     [self transferDataSourceTOEditController];
-    [self presentViewController:self.editController animated:YES completion:nil];
+    [self.navigationController pushViewController:self.editController animated:YES];
 }
 
 //加载本地数据
@@ -294,29 +335,27 @@
         [sortedValues addObject:dict];
     }
     self.localDicts = dicts;
+    
     for (int i = 0; i < dicts.count; i++) {
         ZSRPageView *pageView = [[ZSRPageView alloc] init];
         NSDictionary *dict = sortedValues[i];
         pageView.mydata = [WeatherData mj_objectWithKeyValues:dict].data;
+        pageView.city = pageView.mydata.city;
+        [self.citys addObject:pageView.city];
         [pageView.tableView.mj_header beginRefreshing];
+        [self.pageViews addObject:pageView];
+        [self.scrollView addSubview:pageView];
         [pageView.tableView reloadData];
-        [self.pageViews addObject:pageView];
-        [self.scrollView addSubview:pageView];
     }
-    if (self.pageViews.count>0) {
-        [self reflashPageViews];
-    }else{
-        ZSRPageView *pageView = [[ZSRPageView alloc] init];
-        [self.pageViews addObject:pageView];
-        [self.scrollView addSubview:pageView];
-    }
+    [self loadMoreData];
 }
+
+
 
 #pragma mark - ZSREditControllerDelegate
 
 -(void)editControllerView:(ZSREditController *)controller didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     self.pageControl.currentPage = indexPath.row;
     self.scrollView.contentOffset = CGPointMake(ScreenW * indexPath.row, 0);
 }
@@ -324,29 +363,26 @@
 -(void)editControllerView:(ZSREditController *)controller deleteRowAtIndexPath:(NSIndexPath *)indexPath{
     
     ZSRPageView *removeView =  self.pageViews[indexPath.row];
+    [self.citys removeObjectAtIndex:indexPath.row];
     [removeView removeFromSuperview];
     [self.pageViews removeObject:removeView];
     
-    [self.localDicts removeObjectForKey:[NSString stringWithFormat:@"%ld", indexPath.row]];
     NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithDictionary:self.localDicts];
-
     [self.localDicts removeAllObjects];
-    
     NSArray *myKeys = [dicts allKeys];
-    
     NSArray *sortedKeys = [myKeys sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-    
     for (int i = 0; i < sortedKeys.count; i++) {
         NSString *key = sortedKeys[i];
-        
         NSDictionary *dict = [dicts objectForKey:key];
         [self.localDicts setObject:dict forKey:[NSString stringWithFormat:@"%d", i]];
     }
-    
     for (ZSRPageView *pageView in self.pageViews) {
         [self.scrollView addSubview:pageView];
     }
+    
     [self reflashPageViews];
+    [self transferDataSourceTOEditController];
+  
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -377,7 +413,6 @@
     }];
     self.scrollView.contentSize = CGSizeMake(self.pageViews.count * self.scrollView.bounds.size.width, 0);
     self.pageControl.numberOfPages = self.pageViews.count;
-    [self transferDataSourceTOEditController];
 }
 
 -(void)transferDataSourceTOEditController{
@@ -391,53 +426,64 @@
 }
 
 #pragma mark - 通知
--(void)cityChange:(NSNotification*)note
-{
-    NSDictionary *userInfo = note.userInfo;
-    NSString *cityName = [userInfo objectForKey:@"city"];
-    
-    for (ZSRPageView *pageView in self.pageViews) {
-        if ([pageView.mydata.city isEqualToString:cityName]) {
-            [MBProgressHUD showSuccess:@"此城市已添加"];
-            return;
-        }
-    }
-    [MBProgressHUD showMessage:@"正在添加..." toView:self.editController.view];
-
-    ZSRPageView *pageView = [[ZSRPageView alloc] init];
-    pageView.city = cityName;
-    
-    [ZSRHttpTool requestDataWithCity:cityName success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable data) {
-        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-        [self.localDicts setObject:dict forKey:[NSString stringWithFormat:@"%ld", self.pageViews.count]];
-        // MJExtension框架里,字典转模型的方法
-        pageView.mydata = [WeatherData mj_objectWithKeyValues:dict].data;
-        
-        [self.pageViews addObject:pageView];
-        [self.scrollView addSubview:pageView];
-        [pageView.tableView reloadData];
-        [MBProgressHUD hideHUDForView:self.editController.view];
-        [MBProgressHUD showSuccess:@"添加成功"];
-        [self reflashPageViews];
-    }];
-}
 /** 收到挂起通知做的动作*/
 -(void)willResignActiveAction{
     [self.localDicts writeToFile:filePath atomically:YES];
+    [userDefault setBool:YES forKey:@"isLogin"];
+}
+
+-(void)loadData{
+    [self.pageViews removeAllObjects];
+    [self.localDicts removeAllObjects];
+    NSArray *subViews =  self.scrollView.subviews;
+    for (UIView *view in subViews) {
+        if ([view isKindOfClass:[ZSRPageView class]]) {
+            [view removeFromSuperview];
+        }
+    }
+    for (int i = 0;i<self.citys.count; i++) {
+        NSString *city = self.citys[i];
+        ZSRPageView *pageView = [[ZSRPageView alloc] initWithCity:city];
+        [self.pageViews addObject:pageView];
+        [self.scrollView addSubview:pageView];
+        [ZSRHttpTool requestDataWithCity:city success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable data) {
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+            [self.localDicts setObject:dict forKey:[NSString stringWithFormat:@"%d", i]];
+            pageView.mydata = [WeatherData mj_objectWithKeyValues:dict].data;
+            [pageView.tableView reloadData];
+            [self reflashPageViews];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [MBProgressHUD showError:@"获取数据失败，请重试……"];
+            
+        }];
+        
+    }
+    
+}
+-(void)addCity{
+    [self loadData];
+    self.pageControl.numberOfPages = self.citys.count;
+    self.pageControl.currentPage = self.citys.count;
+    self.scrollView.contentOffset = CGPointMake(ScreenW * self.citys.count, 0);
 }
 
 -(void)loadMoreData{
-    for (ZSRPageView *pageView in self.pageViews) {
+    [self.localDicts removeAllObjects];
+    for (int i =0; i<self.pageViews.count; i++) {
+        ZSRPageView *pageView = self.pageViews[i];
         NSString *cityName =  pageView.mydata.city;
         [ZSRHttpTool requestDataWithCity:cityName success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable data) {
             NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+            [self.localDicts setObject:dict forKey:[NSString stringWithFormat:@"%d", i]];
             // MJExtension框架里,字典转模型的方法
+            
             pageView.mydata = [WeatherData mj_objectWithKeyValues:dict].data;
             NSLog(@"%@",pageView.mydata.city);
             [self reflashPageViews];
             [pageView.tableView.mj_header endRefreshing];
+        }failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull data) {
+            
         }];
     }
 }
-
 @end

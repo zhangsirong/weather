@@ -18,9 +18,17 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
     self.window  = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    ZSRMainViewController *mainController = [[ZSRMainViewController alloc] init];
-    self.window.rootViewController = mainController;
+    ZSRAddCityController *addController = [[ZSRAddCityController alloc] init];
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:addController];
+    self.window.rootViewController = nvc;
+    
+    BOOL login = [userDefault boolForKey:@"isLogin"];
+    if (login) {
+        ZSRMainViewController *mainController = [ZSRMainViewController sharedMainViewController];
+        [nvc pushViewController:mainController animated:NO];
+    }
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;

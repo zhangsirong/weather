@@ -54,12 +54,8 @@
     self.backgroundImageView = backgroundImageView;
     [self.view insertSubview:self.backgroundImageView atIndex:0];
 
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 64)];
-    label.text = @"添加／删除城市";
-    label.textAlignment = NSTextAlignmentCenter;
-    label.backgroundColor = [UIColor colorWithRed:230 green:230 blue:230 alpha:0.4];
-
-    self.tableView.tableHeaderView = label;
+    self.title = @"添加／删除城市";
+    self.navigationItem.hidesBackButton = YES;
     self.tableView.tableFooterView = self.footerView;
     self.tableView.backgroundColor = [UIColor clearColor];
     
@@ -77,18 +73,13 @@
 }
 
 -(void)addCity{
-    NSLog(@"click");
-    NSMutableArray *array = [NSMutableArray arrayWithCapacity:1];
 
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:1];
     for (MyData *data in self.dataSource) {
         [array addObject:data.city];
     }
     
-    ZSRAddCityController *Vc = [[ZSRAddCityController alloc] init];
-    Vc.exitCity = array;
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:Vc];
-    [self presentViewController:nav animated:YES completion:nil];
-    
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
@@ -120,6 +111,7 @@
     
     if ([self.delegate respondsToSelector:@selector(editControllerView:didSelectRowAtIndexPath:)]) {
         [self.delegate editControllerView:self didSelectRowAtIndexPath:indexPath];
+        [self.navigationController popViewControllerAnimated:YES];
         [self dismissViewControllerAnimated:YES completion:nil];
     }    
 }
@@ -144,10 +136,10 @@
 }
 
 -(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row == 0) {
-        return UITableViewCellEditingStyleNone;
+    if (self.dataSource.count > 1) {
+        return UITableViewCellEditingStyleDelete;
     }
-    
-    return UITableViewCellEditingStyleDelete;
+    return UITableViewCellEditingStyleNone;
+
 }
 @end
