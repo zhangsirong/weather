@@ -35,9 +35,14 @@
 @property (nonatomic, strong) NSMutableArray *pageViews;
 @property (nonatomic, strong) NSMutableDictionary *localDicts;
 @property (nonatomic, strong) ZSREditController *editController;
+@property (nonatomic, strong) NSTimer *myTimer;
+@property (nonatomic, strong) NSString *status;
+
+
 @end
 
 @implementation ZSRMainViewController
+
 
 static id _instance;
 
@@ -151,11 +156,10 @@ static id _instance;
     self.areas = [ZSRArea areaList];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"bg.png"] forBarMetrics:UIBarMetricsCompact];
     self.navigationItem.hidesBackButton = YES;
-    [self networkChange];
 
     [self setupSubViews];
     BOOL login = [userDefault boolForKey:@"isLogin"];
-    
+
     if (login) {
         [self loadRecond];
     }else{
@@ -166,43 +170,22 @@ static id _instance;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willResignActiveAction) name:UIApplicationWillTerminateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadMoreData) name:@"loadMoreData" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addCity) name:@"addcity" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChange:) name:networkChangeNotification object:nil];
+
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+     [self.myTimer setFireDate:[NSDate distantFuture]];
+    
+    
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    if (![self.status isEqualToString:networkStatusEnable]) {
+        [self.myTimer setFireDate:[NSDate distantPast]];
+    }
 
-}
-
--(void)dealloc{
-    [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
-}
-
-//网络改变
--(void)networkChange{
-    AFNetworkReachabilityManager *mgr = [AFNetworkReachabilityManager sharedManager];
-    [mgr setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-        // 当网络状态发生改变的时候调用这个block
-        switch (status) {
-            case AFNetworkReachabilityStatusReachableViaWiFi:
-            case AFNetworkReachabilityStatusReachableViaWWAN:
-//                [self searchLocation];
-                break;
-                
-            case AFNetworkReachabilityStatusNotReachable:
-                [MBProgressHUD showError:@"无网络连接，请检查网络"];
-                break;
-                
-            case AFNetworkReachabilityStatusUnknown:
-                [MBProgressHUD showError:@"未知网络"];
-                break;
-            default:
-                break;
-        }
-    }];
-    [mgr startMonitoring];
 }
 
 // 分页控件的监听方法
@@ -230,7 +213,9 @@ static id _instance;
     blurredImageView.alpha = 0;
     [blurredImageView setImageToBlur:background blurRadius:10 completionBlock:nil];
     self.blurredImageView = blurredImageView;
-    
+    for (ZSRPageView *pageView in self.pageViews) {
+        [self.scrollView addSubview:pageView];
+    }
     [self.view addSubview:self.scrollView];
     [self.view addSubview:self.pageControl];
 
@@ -270,12 +255,14 @@ static id _instance;
         pageView.mydata = [WeatherData mj_objectWithKeyValues:dict].data;
         pageView.city = pageView.mydata.city;
         [self.citys addObject:pageView.city];
-        [pageView.tableView.mj_header beginRefreshing];
+
+//        [pageView.tableView.mj_header beginRefreshing];
+        
         [self.pageViews addObject:pageView];
         [self.scrollView addSubview:pageView];
-        [pageView.tableView reloadData];
     }
-    [self loadMoreData];
+    [self reflashPageViews];
+//    [self loadMoreData];
 }
 
 
@@ -309,7 +296,6 @@ static id _instance;
     for (ZSRPageView *pageView in self.pageViews) {
         [self.scrollView addSubview:pageView];
     }
-    
     [self reflashPageViews];
     [self transferDataSourceTOEditController];
   
@@ -358,8 +344,13 @@ static id _instance;
 #pragma mark - 通知
 /** 收到挂起通知做的动作*/
 -(void)willResignActiveAction{
-    [self.localDicts writeToFile:filePath atomically:YES];
-    [userDefault setBool:YES forKey:@"isLogin"];
+    if (self.localDicts.count > 0) {
+        [self.localDicts writeToFile:filePath atomically:YES];
+        [userDefault setBool:YES forKey:@"isLogin"];
+    }else{
+        [userDefault setBool:NO forKey:@"isLogin"];
+
+    }
 }
 
 -(void)loadData{
@@ -402,18 +393,40 @@ static id _instance;
     for (int i =0; i<self.pageViews.count; i++) {
         ZSRPageView *pageView = self.pageViews[i];
         NSString *cityName =  pageView.mydata.city;
+
         [ZSRHttpTool requestDataWithCity:cityName success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable data) {
             NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
             [self.localDicts setObject:dict forKey:[NSString stringWithFormat:@"%d", i]];
             // MJExtension框架里,字典转模型的方法
-            
             pageView.mydata = [WeatherData mj_objectWithKeyValues:dict].data;
             NSLog(@"%@",pageView.mydata.city);
             [self reflashPageViews];
+            [pageView.tableView reloadData];
             [pageView.tableView.mj_header endRefreshing];
         }failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull data) {
             
         }];
     }
+}
+
+-(void)networkChange:(NSNotification *)noti{
+    NSDictionary *dict = noti.userInfo;
+    self.status = [dict objectForKey:networkStatus];
+    
+    if ([self.status isEqualToString:networkStatusEnable]) {
+        [self.myTimer setFireDate:[NSDate distantFuture]];
+        for (ZSRPageView *pageView in self.pageViews) {
+            [pageView.tableView.mj_header beginRefreshing];
+        }
+    }else{
+        self.myTimer =  [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(timerAction) userInfo:nil repeats:YES];
+        [self.myTimer setFireDate:[NSDate distantPast]];
+        
+
+    };
+}
+
+-(void)timerAction{
+    [MBProgressHUD showError:@"网络连接失败，请检查网络设置"];
 }
 @end

@@ -24,6 +24,7 @@
 @property (nonatomic, copy) NSArray *areas;
 @property (nonatomic, strong) ZSRCityView *cityView;
 @property(nonatomic ,strong) NSMutableArray *exitCity;
+@property (nonatomic, strong) NSString *status;
 
 @end
 
@@ -44,10 +45,19 @@
     return _cityView;
 }
 
+-(instancetype)init{
+    if (self = [super init]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChange:) name:networkChangeNotification object:nil];
+    }
+    return self;
+}
 -(void)viewDidLoad{
     [super viewDidLoad];
     [self setupSubViews];
     self.areas = [ZSRArea areaList];
+    
+
+
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -152,13 +162,16 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    BOOL isLogin = YES;
-//    [userDefault setBool:isLogin forKey:@"isLogin"];
-    ZSRArea *area = self.resultsController.filteredAreas[indexPath.row];
-    ZSRMainViewController *mainController = [ZSRMainViewController sharedMainViewController];
-    [mainController.citys addObject:area.namecn];
-    [self.navigationController pushViewController:mainController animated:YES];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"addcity" object:nil];
+    if ([self.status isEqualToString:networkStatusEnable]) {
+        ZSRArea *area = self.resultsController.filteredAreas[indexPath.row];
+        ZSRMainViewController *mainController = [ZSRMainViewController sharedMainViewController];
+        [mainController.citys addObject:area.namecn];
+        [self.navigationController pushViewController:mainController animated:YES];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"addcity" object:nil];
+    }else{
+        [self showAlertController:@"网络连接失败" message:@"请检查网络设置"];
+    }
+    
 
 }
 #pragma mark - UISearchResultsUpdating
@@ -216,12 +229,17 @@
 
 -(void)cityView:(ZSRCityView *)cityView didClickButton:(UIButton *)button{
     
-    
     if ([button.titleLabel.text isEqualToString:@"定位"]) {
         [self searchLocation];
     }else{
-        [self.searchController.searchBar becomeFirstResponder];
-        self.searchController.searchBar.text = button.titleLabel.text;
+        if ([self.status isEqualToString:networkStatusEnable]) {
+            [self.searchController.searchBar becomeFirstResponder];
+            self.searchController.searchBar.text = button.titleLabel.text;
+        }else{
+            [self showAlertController:@"网络连接失败" message:@"请检查网络设置"];
+
+        }
+
     }
 }
 
@@ -242,24 +260,27 @@
                        [self locationSuccess:placemark];
                     }
                 }else{
-                    [self showAlertController:@"定位失败，请手动选择城市"];
+                    [self showAlertController:@"定位失败" message:@"定位失败，请手动选择城市"];
                 }
             }];
         }else if (status == INTULocationStatusServicesDenied){
-            [self showAlertController:@"打开定位权限才可以定位哦"];
+            [self showAlertController:@"定位失败" message:@"打开定位权限才可以定位哦"];
             
         }else{
-            [self showAlertController:@"请检查定位权限或者手动选择城市"];
+            [self showAlertController:@"定位失败" message:@"请检查定位权限或者手动选择城市"];
         }
     }];
 }
 
-- (void)showAlertController:(NSString *)message{
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"定位失败" message:message preferredStyle:UIAlertControllerStyleAlert];
+
+- (void)showAlertController:(NSString *)title message:(NSString *)message{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:nil];
     [alertController addAction:action];
     [self presentViewController:alertController animated:YES completion:nil];
 }
+
+
 
 - (void)locationSuccess:(CLPlacemark *)placemark {
     [MBProgressHUD showSuccess:@"定位成功"];
@@ -279,5 +300,11 @@
     [self.searchController.searchBar becomeFirstResponder];
     self.searchController.searchBar.text = cityName;
 }
+
+-(void)networkChange:(NSNotification *)noti{
+    NSDictionary *dict = noti.userInfo;
+    self.status = [dict objectForKey:networkStatus];
+}
+
 
 @end
