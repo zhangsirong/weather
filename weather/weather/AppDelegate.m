@@ -19,7 +19,8 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+    [NSThread sleepForTimeInterval:2.0];//设置启动页面时间
+    [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     self.window  = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     ZSRAddCityController *addController = [[ZSRAddCityController alloc] init];
     UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:addController];

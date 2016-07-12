@@ -76,6 +76,7 @@
         }
     }
     self.searchController.searchBar.text = @"";
+    [self.searchController.searchBar resignFirstResponder];
 }
 
 -(void)setupSubViews{
@@ -306,5 +307,8 @@
     self.status = [dict objectForKey:networkStatus];
 }
 
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    [self.searchController.searchBar resignFirstResponder];
+}
 
 @end
