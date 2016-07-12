@@ -11,6 +11,8 @@
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
+#import "MBProgressHUD+ZSR.h"
+
 // RGB颜色
 
 #define ZSRColor(r, g, b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1.0]
@@ -24,4 +26,14 @@
 #endif
 #define ScreenW  [UIScreen mainScreen].bounds.size.width
 #define ScreenH  [UIScreen mainScreen].bounds.size.height
+#define userDefault [NSUserDefaults standardUserDefaults]
+
+
+#define networkStatus   @"networkStatus"
+#define networkStatusEnable   @"networkStatusEnable"
+#define networkStatusNotEnable  @"networkStatusNotEnable"
+#define networkStatusUnkonwn   @"networkStatusUnkonwn"
+
+#define networkChangeNotification  @"networkChangeNotification"
+
 #endif

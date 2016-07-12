@@ -10,6 +10,7 @@
 #import "Foundation+Log.h"
 #import "ZSRMainViewController.h"
 #import "ZSRAddCityController.h"
+#import "AFNetworking.h"
 @interface AppDelegate ()
 
 @end
@@ -18,44 +19,78 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [NSThread sleepForTimeInterval:2.0];//设置启动页面时间
+    [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     self.window  = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    ZSRMainViewController *mainController = [[ZSRMainViewController alloc] init];
-    self.window.rootViewController = mainController;
+    ZSRAddCityController *addController = [[ZSRAddCityController alloc] init];
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:addController];
+    self.window.rootViewController = nvc;
+    
+    BOOL login = [userDefault boolForKey:@"isLogin"];
+    if (login) {
+        ZSRMainViewController *mainController = [ZSRMainViewController sharedMainViewController];
+        [nvc pushViewController:mainController animated:NO];
+    }
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    [self networkChange];
     return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-    NSLog(@"%s",__FUNCTION__);
+    [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
 
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    NSLog(@"%s",__FUNCTION__);
 
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    NSLog(@"%s",__FUNCTION__);
 
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    NSLog(@"%s",__FUNCTION__);
 
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+}
+- (void)applicationWillTerminate:(UIApplication *)application {
+
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application {
-    NSLog(@"%s",__FUNCTION__);
 
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+//网络改变
+-(void)networkChange{
+    AFNetworkReachabilityManager *mgr = [AFNetworkReachabilityManager sharedManager];
+    [mgr setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        
+        // 当网络状态发生改变的时候调用这个block
+        switch (status) {
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+                [dict setValue:networkStatusEnable forKey:networkStatus];
+                NSLog(@"有网");
+                break;
+                
+            case AFNetworkReachabilityStatusNotReachable:
+                [dict setValue:networkStatusNotEnable forKey:networkStatus];
+                NSLog(@"断网了");
+                break;
+                
+            case AFNetworkReachabilityStatusUnknown:
+                [dict setValue:networkStatusUnkonwn forKey:networkStatus];
+                break;
+            default:
+                [dict setValue:NULL forKey:networkStatus];
+                break;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:networkChangeNotification object:nil userInfo:dict];
+
+        });
+
+    }];
+    [mgr startMonitoring];
 }
 
 @end

@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface ZSRMainViewController : UIViewController
++ (instancetype)sharedMainViewController;
 
+@property(nonatomic,strong) NSMutableArray *citys;
 
 @end
 

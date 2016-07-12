@@ -102,7 +102,7 @@
     if (indexPath.section == 0 &&indexPath.row ==0) {
         return ScreenH/2;
     }else{
-            return 80;
+            return 70;
     }
 }
 

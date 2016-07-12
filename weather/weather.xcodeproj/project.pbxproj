@@ -81,7 +81,7 @@
 /* Begin PBXFileReference section */
 		3422D9232C0F15BB3D88553B /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		411AABBB5329593627A8493C /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E607A98E1D1BE27E005713DC /* weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E607A98E1D1BE27E005713DC /* 小猪天气.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "小猪天气.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E607A9921D1BE27E005713DC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E607A9941D1BE27E005713DC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E607A9951D1BE27E005713DC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -211,7 +211,7 @@
 		E607A98F1D1BE27E005713DC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E607A98E1D1BE27E005713DC /* weather.app */,
+				E607A98E1D1BE27E005713DC /* 小猪天气.app */,
 				E607A9A71D1BE27E005713DC /* weatherTests.xctest */,
 				E607A9B21D1BE27E005713DC /* weatherUITests.xctest */,
 			);
@@ -389,7 +389,7 @@
 			);
 			name = weather;
 			productName = weather;
-			productReference = E607A98E1D1BE27E005713DC /* weather.app */;
+			productReference = E607A98E1D1BE27E005713DC /* 小猪天气.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E607A9A61D1BE27E005713DC /* weatherTests */ = {
@@ -734,13 +734,16 @@
 			baseConfigurationReference = 3422D9232C0F15BB3D88553B /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "${SRCROOT}/weather/PrefixHeader.pch";
 				INFOPLIST_FILE = weather/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhang.weather;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "小猪天气";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -749,13 +752,16 @@
 			baseConfigurationReference = F111F8382A797663AE4E72DD /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "${SRCROOT}/weather/PrefixHeader.pch";
 				INFOPLIST_FILE = weather/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhang.weather;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "小猪天气";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

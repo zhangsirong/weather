@@ -131,7 +131,7 @@
         }];
         
         [ganmaoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.mas_bottom).offset(-20);
+            make.bottom.equalTo(self.mas_bottom).offset(-5);
             make.left.equalTo(self.mas_left).offset(20);
             make.right.equalTo(self.mas_right).offset(-20);
             
@@ -139,9 +139,9 @@
         }];
         
         [aqiLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(ganmaoLabel.mas_top).offset(-20);
+            make.bottom.equalTo(ganmaoLabel.mas_top).offset(-5);
             make.left.equalTo(self.mas_left).offset(20);
-            make.width.mas_equalTo(300);
+            make.width.mas_equalTo(ScreenW-40);
             make.height.mas_equalTo(20);
         }];
     }
@@ -164,16 +164,19 @@
         self.iconView.image = [UIImage imageNamed:@"light_rain"];
     }else if ([model.conditions containsString:@"阵雨"]){
         self.iconView.image = [UIImage imageNamed:@"shower1"];
-    }else if ([model.conditions isEqualToString:@"暴雨"]){
-        self.iconView.image = [UIImage imageNamed:@"shower3"];
-    }else if ([model.conditions isEqualToString:@"大雨"]){
+    }else if ([model.conditions containsString:@"暴雨"]){
         self.iconView.image = [UIImage imageNamed:@"shower3"];
     }else if ([model.conditions containsString:@"中雨"]){
         self.iconView.image = [UIImage imageNamed:@"shower2"];
+    }else if ([model.conditions containsString:@"大雨"]){
+        self.iconView.image = [UIImage imageNamed:@"shower3"];
     }else if ([model.conditions containsString:@"多云"]){
         self.iconView.image = [UIImage imageNamed:@"cloudy3"];
     }else if ([model.conditions containsString:@"阴"]){
         self.iconView.image = [UIImage imageNamed:@"overcast"];
+    }else if ([model.conditions containsString:@"雾"]){
+        self.iconView.image = [UIImage imageNamed:@"fog"];
     }
+
 }
 @end

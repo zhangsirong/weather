@@ -7,11 +7,18 @@
 //
 
 #import "ZSRCityView.h"
-#define btnH 40
+#define btnH 39
 @interface ZSRCityView()
 @end
 
 @implementation ZSRCityView
+-(NSMutableArray *)cityButtons{
+    if (_cityButtons == nil) {
+        _cityButtons = [NSMutableArray arrayWithCapacity:1];
+    }
+    return _cityButtons;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -42,10 +49,8 @@
             [cityBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             [cityBtn setTitleColor:[UIColor grayColor] forState:UIControlStateSelected];
             [cityBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
-            if ([cityBtn.titleLabel.text isEqualToString:@"定位"]) {
-                cityBtn.selected = YES;
-            }
             [self addSubview:cityBtn];
+            [self.cityButtons addObject:cityBtn];
         }
     }
     return self;

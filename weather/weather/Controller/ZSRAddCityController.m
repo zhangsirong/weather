@@ -10,6 +10,8 @@
 #import "ZSRResultsController.h"
 #import "ZSRArea.h"
 #import "ZSRCityView.h"
+#import "ZSRMainViewController.h"
+#import "INTULocationManager.h"
 @interface ZSRAddCityController () <UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating,ZSRCityViewDelegate>
 
 @property (nonatomic, strong) UISearchController *searchController;
@@ -21,12 +23,20 @@
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, copy) NSArray *areas;
 @property (nonatomic, strong) ZSRCityView *cityView;
-
+@property(nonatomic ,strong) NSMutableArray *exitCity;
+@property (nonatomic, strong) NSString *status;
 
 @end
 
 
 @implementation ZSRAddCityController
+
+-(NSMutableArray *)exitCity{
+    if (_exitCity == nil) {
+        _exitCity = [NSMutableArray arrayWithCapacity:1];
+    }
+    return _exitCity;
+}
 -(ZSRCityView *)cityView{
     if (_cityView == nil) {
         _cityView = [[ZSRCityView alloc] initWithFrame:CGRectMake(20, 50, ScreenW-40, ScreenH)];
@@ -35,10 +45,38 @@
     return _cityView;
 }
 
+-(instancetype)init{
+    if (self = [super init]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChange:) name:networkChangeNotification object:nil];
+    }
+    return self;
+}
 -(void)viewDidLoad{
     [super viewDidLoad];
     [self setupSubViews];
     self.areas = [ZSRArea areaList];
+    
+
+
+}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.exitCity = [ZSRMainViewController sharedMainViewController].citys;
+    self.resultsController.exitCity = self.exitCity;
+    for (UIButton *btn in self.cityView.cityButtons) {
+        for (NSString *cityName in self.exitCity) {
+            if ([cityName isEqualToString:btn.titleLabel.text]) {
+                btn.selected = YES;
+                btn.userInteractionEnabled=NO;
+                break;
+            }else{
+                btn.selected = NO;
+                btn.userInteractionEnabled=YES;
+            }
+        }
+    }
+    self.searchController.searchBar.text = @"";
+    [self.searchController.searchBar resignFirstResponder];
 }
 
 -(void)setupSubViews{
@@ -96,9 +134,15 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
+    
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    searchBar.text = @"";
+    ZSRMainViewController *mainController = [ZSRMainViewController sharedMainViewController];
+    if (mainController.citys.count >0) {
+        [self.navigationController pushViewController:mainController animated:YES];
+
+    }
 }
 
 
@@ -107,16 +151,29 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
-    return NULL;
+    
+    static NSString *ID = @"cellID";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ID];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.backgroundColor = [UIColor clearColor];
+    }
+    return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    ZSRArea *area = self.resultsController.filteredAreas[indexPath.row];
-    NSDictionary *dict = @{@"city":area.namecn};
-    NSLog(@"%@",area);
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"CityChange" object:nil userInfo:dict];
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    if ([self.status isEqualToString:networkStatusEnable]) {
+        ZSRArea *area = self.resultsController.filteredAreas[indexPath.row];
+        ZSRMainViewController *mainController = [ZSRMainViewController sharedMainViewController];
+        [mainController.citys addObject:area.namecn];
+        [self.navigationController pushViewController:mainController animated:YES];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"addcity" object:nil];
+    }else{
+        [self showAlertController:@"网络连接失败" message:@"请检查网络设置"];
+    }
+    
+
 }
 #pragma mark - UISearchResultsUpdating
 
@@ -174,10 +231,84 @@
 -(void)cityView:(ZSRCityView *)cityView didClickButton:(UIButton *)button{
     
     if ([button.titleLabel.text isEqualToString:@"定位"]) {
-        NSLog(@"定位");
+        [self searchLocation];
     }else{
-        [self.searchController.searchBar becomeFirstResponder];
-        self.searchController.searchBar.text = button.titleLabel.text;
+        if ([self.status isEqualToString:networkStatusEnable]) {
+            [self.searchController.searchBar becomeFirstResponder];
+            self.searchController.searchBar.text = button.titleLabel.text;
+        }else{
+            [self showAlertController:@"网络连接失败" message:@"请检查网络设置"];
+
+        }
+
     }
 }
+
+
+#pragma mark - 定位
+
+
+- (void)searchLocation {
+    INTULocationManager *locMgr = [INTULocationManager sharedInstance];
+    
+    [locMgr requestLocationWithDesiredAccuracy:INTULocationAccuracyCity timeout:10.0 delayUntilAuthorized:YES block:^(CLLocation *currentLocation, INTULocationAccuracy achievedAccuracy, INTULocationStatus status) {
+        //定位成功 到网络获取数据
+        if (status == INTULocationStatusSuccess) {
+            [[[CLGeocoder alloc] init] reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+                if(!error){
+                    for (CLPlacemark *placemark in placemarks) {
+                        NSLog(@"%@ %@ %f %f", placemark.subLocality, placemark.addressDictionary, placemark.location.coordinate.latitude, placemark.location.coordinate.longitude);
+                       [self locationSuccess:placemark];
+                    }
+                }else{
+                    [self showAlertController:@"定位失败" message:@"定位失败，请手动选择城市"];
+                }
+            }];
+        }else if (status == INTULocationStatusServicesDenied){
+            [self showAlertController:@"定位失败" message:@"打开定位权限才可以定位哦"];
+            
+        }else{
+            [self showAlertController:@"定位失败" message:@"请检查定位权限或者手动选择城市"];
+        }
+    }];
+}
+
+
+- (void)showAlertController:(NSString *)title message:(NSString *)message{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:action];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+
+
+- (void)locationSuccess:(CLPlacemark *)placemark {
+    [MBProgressHUD showSuccess:@"定位成功"];
+    NSString *cityName = @"";
+    NSString *realSubLocality = [placemark.subLocality substringWithRange:NSMakeRange(0, placemark.subLocality.length-1)];
+    NSString *realCity = [placemark.locality substringWithRange:NSMakeRange(0, placemark.locality.length-1)];
+    
+    for (ZSRArea *area in self.areas) {
+        cityName = [area.namecn isEqualToString:realSubLocality] ? realSubLocality : realCity;
+    }
+    if(cityName == NULL){
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"不支持该定位城市" message:@"请选择中国大陆内的城市，谢谢" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:action];
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    [self.searchController.searchBar becomeFirstResponder];
+    self.searchController.searchBar.text = cityName;
+}
+
+-(void)networkChange:(NSNotification *)noti{
+    NSDictionary *dict = noti.userInfo;
+    self.status = [dict objectForKey:networkStatus];
+}
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    [self.searchController.searchBar resignFirstResponder];
+}
+
 @end

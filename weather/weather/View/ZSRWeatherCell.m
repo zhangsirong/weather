@@ -174,7 +174,7 @@
         self.iconView.image = [UIImage imageNamed:@"shower1"];
     }else if ([forecastModel.type isEqualToString:@"暴雨"]){
         self.iconView.image = [UIImage imageNamed:@"shower3"];
-    }else if ([forecastModel.type isEqualToString:@"大雨"]){
+    }else if ([forecastModel.type containsString:@"大雨"]){
         self.iconView.image = [UIImage imageNamed:@"shower3"];
     }else if ([forecastModel.type containsString:@"中雨"]){
         self.iconView.image = [UIImage imageNamed:@"shower2"];
@@ -182,6 +182,8 @@
         self.iconView.image = [UIImage imageNamed:@"cloudy3"];
     }else if ([forecastModel.type containsString:@"阴"]){
         self.iconView.image = [UIImage imageNamed:@"overcast"];
+    }else if ([forecastModel.type containsString:@"雾"]){
+        self.iconView.image = [UIImage imageNamed:@"fog"];
     }
 }
 

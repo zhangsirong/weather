@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
 @interface ZSRResultsController : UITableViewController
 
 @property (nonatomic, strong) NSArray *filteredAreas;
+@property(nonatomic ,strong) NSMutableArray *exitCity;
 
 @end
