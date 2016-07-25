@@ -11,10 +11,8 @@
 		E607A9931D1BE27E005713DC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E607A9921D1BE27E005713DC /* main.m */; };
 		E607A9961D1BE27E005713DC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E607A9951D1BE27E005713DC /* AppDelegate.m */; };
 		E607A99E1D1BE27E005713DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E607A99D1D1BE27E005713DC /* Assets.xcassets */; };
-		E607A9A11D1BE27E005713DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E607A99F1D1BE27E005713DC /* LaunchScreen.storyboard */; };
 		E607A9AC1D1BE27E005713DC /* weatherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E607A9AB1D1BE27E005713DC /* weatherTests.m */; };
 		E607A9B71D1BE27E005713DC /* weatherUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E607A9B61D1BE27E005713DC /* weatherUITests.m */; };
-		E68B4C6C1D1D0BE800474A45 /* area.txt in Resources */ = {isa = PBXBuildFile; fileRef = E68B4C6B1D1D0BE800474A45 /* area.txt */; };
 		E68EBB881D26820400C02E6E /* ZSRAddCityController.m in Sources */ = {isa = PBXBuildFile; fileRef = E68EBB641D26820400C02E6E /* ZSRAddCityController.m */; };
 		E68EBB891D26820400C02E6E /* ZSREditController.m in Sources */ = {isa = PBXBuildFile; fileRef = E68EBB661D26820400C02E6E /* ZSREditController.m */; };
 		E68EBB8A1D26820400C02E6E /* ZSRMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E68EBB681D26820400C02E6E /* ZSRMainViewController.m */; };
@@ -33,7 +31,6 @@
 		E68EBB971D26820400C02E6E /* ZSRTadayViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68EBB851D26820400C02E6E /* ZSRTadayViewCell.m */; };
 		E68EBB981D26820400C02E6E /* ZSRWeatherCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68EBB871D26820400C02E6E /* ZSRWeatherCell.m */; };
 		E68EBBB51D2682E100C02E6E /* bg1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E68EBB9B1D2682E100C02E6E /* bg1.jpg */; };
-		E68EBBB61D2682E100C02E6E /* bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E68EBB9C1D2682E100C02E6E /* bg@2x.png */; };
 		E68EBBB71D2682E100C02E6E /* cloudy1.png in Resources */ = {isa = PBXBuildFile; fileRef = E68EBB9D1D2682E100C02E6E /* cloudy1.png */; };
 		E68EBBB81D2682E100C02E6E /* cloudy2.png in Resources */ = {isa = PBXBuildFile; fileRef = E68EBB9E1D2682E100C02E6E /* cloudy2.png */; };
 		E68EBBB91D2682E100C02E6E /* cloudy3.png in Resources */ = {isa = PBXBuildFile; fileRef = E68EBB9F1D2682E100C02E6E /* cloudy3.png */; };
@@ -86,7 +83,6 @@
 		E607A9941D1BE27E005713DC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E607A9951D1BE27E005713DC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		E607A99D1D1BE27E005713DC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		E607A9A01D1BE27E005713DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E607A9A21D1BE27E005713DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E607A9A71D1BE27E005713DC /* weatherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = weatherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E607A9AB1D1BE27E005713DC /* weatherTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = weatherTests.m; sourceTree = "<group>"; };
@@ -95,7 +91,6 @@
 		E607A9B61D1BE27E005713DC /* weatherUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = weatherUITests.m; sourceTree = "<group>"; };
 		E607A9B81D1BE27E005713DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E64C67051D251FEB0056C9A9 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		E68B4C6B1D1D0BE800474A45 /* area.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = area.txt; sourceTree = "<group>"; };
 		E68EBB631D26820400C02E6E /* ZSRAddCityController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSRAddCityController.h; sourceTree = "<group>"; };
 		E68EBB641D26820400C02E6E /* ZSRAddCityController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSRAddCityController.m; sourceTree = "<group>"; };
 		E68EBB651D26820400C02E6E /* ZSREditController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSREditController.h; sourceTree = "<group>"; };
@@ -131,7 +126,6 @@
 		E68EBB861D26820400C02E6E /* ZSRWeatherCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSRWeatherCell.h; sourceTree = "<group>"; };
 		E68EBB871D26820400C02E6E /* ZSRWeatherCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSRWeatherCell.m; sourceTree = "<group>"; };
 		E68EBB9B1D2682E100C02E6E /* bg1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg1.jpg; sourceTree = "<group>"; };
-		E68EBB9C1D2682E100C02E6E /* bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg@2x.png"; sourceTree = "<group>"; };
 		E68EBB9D1D2682E100C02E6E /* cloudy1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloudy1.png; sourceTree = "<group>"; };
 		E68EBB9E1D2682E100C02E6E /* cloudy2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloudy2.png; sourceTree = "<group>"; };
 		E68EBB9F1D2682E100C02E6E /* cloudy3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloudy3.png; sourceTree = "<group>"; };
@@ -231,9 +225,7 @@
 				E607A9941D1BE27E005713DC /* AppDelegate.h */,
 				E607A9951D1BE27E005713DC /* AppDelegate.m */,
 				E607A99D1D1BE27E005713DC /* Assets.xcassets */,
-				E607A99F1D1BE27E005713DC /* LaunchScreen.storyboard */,
 				E6E0C47C1D1D112100888F44 /* area.plist */,
-				E68B4C6B1D1D0BE800474A45 /* area.txt */,
 				E607A9A21D1BE27E005713DC /* Info.plist */,
 				E607A9911D1BE27E005713DC /* Supporting Files */,
 			);
@@ -333,7 +325,6 @@
 			isa = PBXGroup;
 			children = (
 				E68EBB9B1D2682E100C02E6E /* bg1.jpg */,
-				E68EBB9C1D2682E100C02E6E /* bg@2x.png */,
 				E68EBB9D1D2682E100C02E6E /* cloudy1.png */,
 				E68EBB9E1D2682E100C02E6E /* cloudy2.png */,
 				E68EBB9F1D2682E100C02E6E /* cloudy3.png */,
@@ -439,7 +430,7 @@
 				TargetAttributes = {
 					E607A98D1D1BE27E005713DC = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = FJG6A73NSQ;
+						DevelopmentTeam = EC87CRQ8DS;
 					};
 					E607A9A61D1BE27E005713DC = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -480,8 +471,6 @@
 			files = (
 				E68EBBB51D2682E100C02E6E /* bg1.jpg in Resources */,
 				E68EBBBA1D2682E100C02E6E /* cloudy4.png in Resources */,
-				E607A9A11D1BE27E005713DC /* LaunchScreen.storyboard in Resources */,
-				E68EBBB61D2682E100C02E6E /* bg@2x.png in Resources */,
 				E68EBBC81D2682E100C02E6E /* snow4.png in Resources */,
 				E607A99E1D1BE27E005713DC /* Assets.xcassets in Resources */,
 				E68EBBBC1D2682E100C02E6E /* fog.png in Resources */,
@@ -491,7 +480,6 @@
 				E68EBBC01D2682E100C02E6E /* overcast.png in Resources */,
 				E6E0C47D1D1D112100888F44 /* area.plist in Resources */,
 				E68EBBC11D2682E100C02E6E /* shower1.png in Resources */,
-				E68B4C6C1D1D0BE800474A45 /* area.txt in Resources */,
 				E68EBBB91D2682E100C02E6E /* cloudy3.png in Resources */,
 				E68EBBCB1D2682E100C02E6E /* tstorm1.png in Resources */,
 				E68EBBB71D2682E100C02E6E /* cloudy1.png in Resources */,
@@ -633,17 +621,6 @@
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXVariantGroup section */
-		E607A99F1D1BE27E005713DC /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E607A9A01D1BE27E005713DC /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
 		E607A9B91D1BE27E005713DC /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -663,7 +640,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: SiRong Zhang (EC87CRQ8DS)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -682,9 +660,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "a1498fc0-1348-4f14-bc3a-2953b5f68e70";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -708,7 +687,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SiRong Zhang (EC87CRQ8DS)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -721,8 +700,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "a1498fc0-1348-4f14-bc3a-2953b5f68e70";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -736,13 +716,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "${SRCROOT}/weather/PrefixHeader.pch";
 				INFOPLIST_FILE = weather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.zhang.weather;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhang.myweather;
 				PRODUCT_NAME = "小猪天气";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -754,13 +736,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "${SRCROOT}/weather/PrefixHeader.pch";
 				INFOPLIST_FILE = weather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.zhang.weather;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhang.myweather;
 				PRODUCT_NAME = "小猪天气";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

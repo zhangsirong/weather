@@ -154,7 +154,7 @@ static id _instance;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.areas = [ZSRArea areaList];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"bg.png"] forBarMetrics:UIBarMetricsCompact];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"bg1.jpg"] forBarMetrics:UIBarMetricsCompact];
     self.navigationItem.hidesBackButton = YES;
 
     [self setupSubViews];
@@ -427,6 +427,9 @@ static id _instance;
 }
 
 -(void)timerAction{
+    for (ZSRPageView *pageView in self.pageViews) {
+        [pageView.tableView.mj_header endRefreshing];
+    }
     [MBProgressHUD showError:@"网络连接失败，请检查网络设置"];
 }
 @end
