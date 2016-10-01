@@ -176,6 +176,8 @@
         self.iconView.image = [UIImage imageNamed:@"overcast"];
     }else if ([model.conditions containsString:@"雾"]){
         self.iconView.image = [UIImage imageNamed:@"fog"];
+    }else if ([model.conditions containsString:@"霾"]){
+        self.iconView.image = [UIImage imageNamed:@"mist"];
     }
 
 }

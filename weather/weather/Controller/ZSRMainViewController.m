@@ -177,14 +177,20 @@ static id _instance;
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
      [self.myTimer setFireDate:[NSDate distantFuture]];
-    
-    
+    self.navigationController.navigationBarHidden = NO;
 }
+    
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    self.navigationController.navigationBarHidden = YES;
+}
+    
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     if (![self.status isEqualToString:networkStatusEnable]) {
         [self.myTimer setFireDate:[NSDate distantPast]];
     }
+
 
 }
 

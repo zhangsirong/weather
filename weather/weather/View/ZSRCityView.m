@@ -43,7 +43,7 @@
             UIButton *cityBtn = [[UIButton alloc] initWithFrame:CGRectMake(col * (self.bounds.size.width)/columns, row * btnH+ 50, self.bounds.size.width/columns  , btnH)];
             cityBtn.layer.borderWidth = 0.5;
             cityBtn.layer.borderColor = [UIColor grayColor].CGColor;
-            cityBtn.backgroundColor = [UIColor colorWithRed:198 green:198 blue:202 alpha:0.2];
+            cityBtn.backgroundColor = [UIColor clearColor];
             cityBtn.titleLabel.font = [UIFont systemFontOfSize:15];
             [cityBtn setTitle:cityArray[i] forState:UIControlStateNormal];
             [cityBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
