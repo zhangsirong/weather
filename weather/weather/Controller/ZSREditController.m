@@ -52,14 +52,11 @@
     UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:background];
     backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.backgroundImageView = backgroundImageView;
-    [self.view insertSubview:self.backgroundImageView atIndex:0];
-
+    self.tableView.backgroundView = self.backgroundImageView;
     self.title = @"添加／删除城市";
     self.navigationItem.hidesBackButton = YES;
     self.tableView.tableFooterView = self.footerView;
     self.tableView.backgroundColor = [UIColor clearColor];
-    
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{

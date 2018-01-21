@@ -163,8 +163,36 @@
     self.timeLabel.text = forecastModel.date;
     self.conditionsLabel.text = forecastModel.type;
     self.fengXLabel.text = forecastModel.fengxiang;
-    self.fengLLabel.text = forecastModel.fengli;
-    self.wenduLabel.text = [NSString stringWithFormat:@"%@°/%@°",[forecastModel.high substringWithRange:NSMakeRange(3, 2)],[forecastModel.low substringWithRange:NSMakeRange(3, 2) ]];
+    
+    NSString *fengliString = forecastModel.fengli;
+    if (fengliString.length > 3) {
+        NSRange range = [forecastModel.fengli rangeOfString:@"级"];
+        
+        NSString *fengLiNumString = [fengliString substringWithRange:NSMakeRange(range.location - 2, 2)];
+        
+        if ([fengLiNumString integerValue] > 0) {
+            fengliString = [NSString stringWithFormat:@"%@级",fengLiNumString];
+        }
+        else {
+            fengLiNumString = [fengliString substringWithRange:NSMakeRange(range.location - 1, 1)];
+            fengliString = [NSString stringWithFormat:@"%@级",fengLiNumString];
+        }
+        self.fengLLabel.text = fengliString;
+    }
+    else {
+        self.fengLLabel.text = forecastModel.fengli;
+    }
+
+    NSRange spaceHeightRange = [forecastModel.high rangeOfString:@" "];
+    NSRange tempHeightRange = [forecastModel.high rangeOfString:@"℃"];
+    
+    NSRange heightRange = NSMakeRange(spaceHeightRange.location + 1, tempHeightRange.location - spaceHeightRange.location - 1);
+    
+    NSRange spaceLowRange = [forecastModel.low rangeOfString:@" "];
+    NSRange tempLowRange = [forecastModel.low rangeOfString:@"℃"];
+    NSRange LowheightRange = NSMakeRange(spaceLowRange.location + 1, tempLowRange.location - spaceLowRange.location - 1);
+
+    self.wenduLabel.text = [NSString stringWithFormat:@"%@°/%@°",[forecastModel.high substringWithRange:heightRange],[forecastModel.low substringWithRange:LowheightRange]];
    
     if ([forecastModel.type isEqualToString:@"晴"]) {
         self.iconView.image = [UIImage imageNamed:@"sunny"];
