@@ -27,6 +27,7 @@
 #define ScreenW  [UIScreen mainScreen].bounds.size.width
 #define ScreenH  [UIScreen mainScreen].bounds.size.height
 #define userDefault [NSUserDefaults standardUserDefaults]
+#define isIphone375_812     (ScreenW > 374 && ScreenW < 376 && ScreenH > 811 && ScreenH < 813)
 
 
 #define networkStatus   @"networkStatus"

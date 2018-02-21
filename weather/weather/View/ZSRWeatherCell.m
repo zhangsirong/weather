@@ -107,7 +107,7 @@
         wenduLabel.backgroundColor = [UIColor clearColor];
         wenduLabel.translatesAutoresizingMaskIntoConstraints = NO;
         wenduLabel.textColor = [UIColor whiteColor];
-        wenduLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:25];
+        wenduLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:22];
         wenduLabel.textAlignment = NSTextAlignmentCenter;
         wenduLabel.text = @"36°/28°";
         self.wenduLabel = wenduLabel;

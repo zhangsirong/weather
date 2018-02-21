@@ -135,8 +135,12 @@ static id _instance;
         _pageControl.numberOfPages = 1;
         
         _pageControl.bounds = CGRectMake(0, 0, ScreenW-44, 44);
+        CGFloat y = ScreenH - 20;
         
-        _pageControl.center = CGPointMake(self.view.center.x, ScreenH-20);
+        if (isIphone375_812) {
+            y = ScreenH - 20 - 10;
+        }
+        _pageControl.center = CGPointMake(self.view.center.x, y);
         
         // 设置颜色
         _pageControl.pageIndicatorTintColor = [UIColor redColor];
@@ -225,7 +229,11 @@ static id _instance;
     [self.view addSubview:self.scrollView];
     [self.view addSubview:self.pageControl];
 
-    UIButton *editButton = [[UIButton alloc] initWithFrame:CGRectMake(ScreenW-44, ScreenH-44, 44, 44)];
+    CGFloat y = ScreenH-44;
+    if (isIphone375_812) {
+        y = ScreenH - 44 - 10;
+    }
+    UIButton *editButton = [[UIButton alloc] initWithFrame:CGRectMake(ScreenW-44, y, 44, 44)];
     [editButton setTitle:@"编辑" forState:UIControlStateNormal];
     [editButton addTarget:self action:@selector(buttonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:editButton];

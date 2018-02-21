@@ -99,6 +99,9 @@
     self.resultsController.tableView.delegate = self;
     self.resultsController.tableView.backgroundColor = [UIColor clearColor];
     self.resultsController.tableView.tableFooterView = [[UIView alloc] init];
+    if (@available(iOS 11.0, *)) {
+        self.resultsController.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     self.searchController.delegate = self;
     self.searchController.dimsBackgroundDuringPresentation = NO; // default is YES
     self.searchController.searchBar.delegate = self; // so we can monitor text changes + others

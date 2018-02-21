@@ -2,6 +2,15 @@
   "images" : [
     {
       "extent" : "full-screen",
+      "orientation" : "portrait",
+      "idiom" : "iphone",
+      "filename" : "LunchImage-5.6.png",
+      "minimum-system-version" : "11.0",
+      "subtype" : "2436h",
+      "scale" : "3x"
+    },
+    {
+      "extent" : "full-screen",
       "idiom" : "iphone",
       "subtype" : "736h",
       "filename" : "LunchImage-5.5.png",

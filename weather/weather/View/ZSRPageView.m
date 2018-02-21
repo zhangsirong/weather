@@ -68,6 +68,10 @@
     tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"loadMoreData" object:nil];
     }];
+    tableView.showsVerticalScrollIndicator = NO;
+    if (@available(iOS 11.0, *)) {
+        tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     self.tableView = tableView;
     [self addSubview:tableView];
 }
