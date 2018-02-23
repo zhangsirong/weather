@@ -434,7 +434,8 @@
 				TargetAttributes = {
 					E607A98D1D1BE27E005713DC = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = FJG6A73NSQ;
+						DevelopmentTeam = EC87CRQ8DS;
+						ProvisioningStyle = Automatic;
 					};
 					E607A9A61D1BE27E005713DC = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -737,15 +738,17 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = FJG6A73NSQ;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = EC87CRQ8DS;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "${SRCROOT}/weather/PrefixHeader.pch";
 				INFOPLIST_FILE = weather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.zhang.weather;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhang.myweather;
 				PRODUCT_NAME = "小猪天气";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -758,15 +761,17 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = FJG6A73NSQ;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = EC87CRQ8DS;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "${SRCROOT}/weather/PrefixHeader.pch";
 				INFOPLIST_FILE = weather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.zhang.weather;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhang.myweather;
 				PRODUCT_NAME = "小猪天气";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
